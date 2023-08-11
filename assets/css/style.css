@@ -164,15 +164,6 @@ body { background: var(--smoky-black); }
 /*-----------------------------------*\
   #REUSED STYLE
 \*-----------------------------------*/
-
-        .dark-mode {
-            background-color: black;
-            color: white;
-        }
- 
-        .light-mode {
-            background-color: white;
-            color: black;
 		
 .sidebar,
 article {
