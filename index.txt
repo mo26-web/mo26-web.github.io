@@ -86,6 +86,13 @@ Clients
 alt = client logo
 
 
+# Publications
+
+Publications
+
+Journal
+
+
 
 # resume
 
