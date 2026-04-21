@@ -1,1060 +1,718 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Guglielmo Cerri - Data Scientist and Bioinformatician. Explore my expertise in data science and bioinformatics.">
-    <!--==================== UNICONS ====================-->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!--==================== SWIPER CSS ====================-->
-    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mohammad Hossein Modirrousta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    <!--==================== CSS ====================-->
-    <link rel="stylesheet" href="assets/css/styles.css">
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fff9f3;
+      --ink: #1c1a17;
+      --muted: #6b6560;
+      --accent: #b85c38;
+      --accent-light: #f0e0d6;
+      --border: #e8e0d5;
+      --section-bg: #f5f0e8;
+    }
 
-    <title>Guglielmo Cerri - Data Scientist and Bioinformatician</title>
-    <meta name="keywords" content="data scientist, bioinformatician, data science, bioinformatics, Guglielmo Cerri">
-    <meta name="author" content="Guglielmo Cerri">
-    <meta name="robots" content="index, follow">
-    <meta name="google-site-verification" content="KYe6GsSYjjdW_70JlJh1PmUMcjtCYCgVxAILWMEkWSw" />
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(250,247,242,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .nav-name {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+    }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none;
+      font-size: 0.82rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--accent); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 100px 2rem 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 80% 50%, rgba(184,92,56,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 50% at 10% 80%, rgba(184,92,56,0.04) 0%, transparent 60%);
+    }
+    .hero-inner {
+      max-width: 860px; margin: 0 auto;
+      position: relative;
+      animation: fadeUp 0.9s ease both;
+    }
+    .hero-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.2rem;
+      display: flex; align-items: center; gap: 0.7rem;
+    }
+    .hero-label::before {
+      content: '';
+      display: block; width: 32px; height: 1px;
+      background: var(--accent);
+    }
+    h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      color: var(--ink);
+    }
+    .hero-tagline {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 560px;
+      margin-bottom: 2rem;
+    }
+    .hero-links { display: flex; flex-wrap: wrap; gap: 0.8rem; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.55rem 1.3rem;
+      border-radius: 2px;
+      font-size: 0.82rem;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      border: 1px solid var(--accent);
+    }
+    .btn-primary:hover { background: #9e4b2c; border-color: #9e4b2c; }
+    .btn-outline {
+      background: transparent; color: var(--ink);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section { padding: 80px 2rem; }
+    .section-inner { max-width: 860px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 600;
+      margin-bottom: 2.5rem;
+      color: var(--ink);
+    }
+    .divider {
+      width: 40px; height: 2px;
+      background: var(--accent);
+      margin-bottom: 2.5rem;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--warm-white); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .about-text p { color: var(--muted); margin-bottom: 1rem; font-size: 0.97rem; }
+    .about-cards { display: flex; flex-direction: column; gap: 0.9rem; }
+    .about-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1rem 1.2rem;
+    }
+    .about-card .card-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .about-card .card-val { font-size: 0.92rem; color: var(--ink); font-weight: 400; }
+
+    /* ── EXPERIENCE ── */
+    #experience { background: var(--cream); }
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 1.5rem;
+      padding: 1.6rem 0;
+      border-bottom: 1px solid var(--border);
+      animation: fadeUp 0.6s ease both;
+    }
+    .timeline-item:last-child { border-bottom: none; }
+    .t-year { font-size: 0.8rem; color: var(--muted); padding-top: 0.2rem; }
+    .t-role { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .t-place { font-size: 0.85rem; color: var(--accent); margin-bottom: 0.4rem; }
+    .t-desc { font-size: 0.88rem; color: var(--muted); }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--section-bg); }
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.2rem; }
+    .skill-group {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.2rem;
+    }
+    .skill-group h4 {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
+    }
+    .skill-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .skill-tag {
+      background: var(--accent-light);
+      color: var(--ink);
+      font-size: 0.78rem;
+      padding: 0.2rem 0.7rem;
+      border-radius: 2px;
+      border: 1px solid rgba(184,92,56,0.15);
+    }
+
+    /* ── PAPERS ── */
+    #papers { background: var(--warm-white); }
+    .papers-list { display: flex; flex-direction: column; gap: 1.2rem; }
+    .paper-card {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 4px 4px 0;
+      padding: 1.2rem 1.4rem;
+      transition: box-shadow 0.2s;
+    }
+    .paper-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .paper-venue {
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+    .paper-title {
+      font-family: 'Lora', serif;
+      font-size: 0.97rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      line-height: 1.45;
+    }
+    .paper-authors { font-size: 0.82rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .paper-link {
+      font-size: 0.78rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    .paper-link:hover { text-decoration: underline; }
+    .paper-status {
+      display: inline-block;
+      font-size: 0.7rem;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+      border-radius: 2px;
+      padding: 0.15rem 0.5rem;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+
+    /* ── PROJECTS ── */
+    #projects { background: var(--cream); }
+    .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.2rem; }
+    .project-card {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.4rem;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .project-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .project-card h3 { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .project-card p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1rem; }
+    .project-tag {
+      font-size: 0.72rem;
+      background: var(--accent-light);
+      color: var(--ink);
+      padding: 0.15rem 0.6rem;
+      border-radius: 2px;
+    }
+
+    /* ── AWARDS ── */
+    #awards { background: var(--section-bg); }
+    .awards-list { display: flex; flex-direction: column; gap: 0.7rem; }
+    .award-item {
+      display: flex; align-items: baseline; gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+    .award-dot {
+      width: 6px; height: 6px; min-width: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 0.4rem;
+    }
+    .award-text { font-size: 0.88rem; color: var(--ink); }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--ink); }
+    #contact .section-label { color: #b85c38; }
+    #contact h2 { color: #faf7f2; }
+    #contact .divider { background: var(--accent); }
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .contact-item {
+      display: flex; flex-direction: column; gap: 0.3rem;
+      padding: 1.2rem;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px;
+    }
+    .contact-item .c-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .contact-item a, .contact-item span {
+      font-size: 0.9rem;
+      color: #e0d8ce;
+      text-decoration: none;
+    }
+    .contact-item a:hover { color: #fff; text-decoration: underline; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeUp 0.7s ease both; }
+    .delay-1 { animation-delay: 0.15s; }
+    .delay-2 { animation-delay: 0.3s; }
+    .delay-3 { animation-delay: 0.45s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 680px) {
+      .about-grid, .contact-grid { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; gap: 0.3rem; }
+      .nav-links { gap: 1rem; }
+      nav { padding: 0 1rem; }
+    }
+  </style>
 </head>
-
 <body>
-    <!--==================== HEADER ====================-->
-    <header class="header" id="header">
-        <nav class="nav container">
-            <a href="#" class="nav__logo">Guglielmo Cerri</a>
-            <div class="nav__menu" id="nav-menu">
-                <ul class="nav__list grid">
-                    <li class="nav__item">
-                        <a href="#home" class="nav__link active-link">
-                            <i class="uil uil-estate nav__icon"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#about" class="nav__link">
-                            <i class="uil uil-user nav__icon"></i> About
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#skills" class="nav__link">
-                            <i class="uil uil-file-alt nav__icon"></i> Skills
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#qualifications" class="nav__link">
-                            <i class="uil uil-graduation-cap nav__icon"></i> Qualifications
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#expertise" class="nav__link">
-                            <i class="uil uil-briefcase-alt nav__icon"></i> Expertise
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#portfolio" class="nav__link">
-                            <i class="uil uil-scenery nav__icon"></i> Portfolio
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#articles" class="nav__link">
-                            <i class="uil uil-book-open nav__icon"></i> Articles
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#contact" class="nav__link">
-                            <i class="uil uil-estate nav__icon"></i> Contact Me
-                        </a>
-                    </li>
-                </ul>
-                <i class="uil uil-times nav__close" id="nav-close"></i>
-            </div>
-            
-            <div class="nav__btns">
-                <!--Theme change button-->
-                <i class="uil uil-moon change-theme" id="theme-button"></i>
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class="uil uil-apps"></i>
-                </div>
-            </div>
 
-        </nav>
-    </header>
-
-    <!--==================== MAIN ====================-->
-    <main class="main">
-        <!--==================== HOME ====================-->
-        <section class="home section" id="home">
-            <div class="home__container container grid">
-                <div class="home__content grid">
-                    <div class="home__social">
-                        <a href="https://www.linkedin.com/in/guglielmocerri/" target="_blank" class="home__social-icon">
-                            <i class="uil uil-linkedin-alt"></i>
-                        </a>
-                        <a href="https://stackoverflow.com/users/12829151/will" target="_blank" class="home__social-icon">
-                            <i class="fa fa-stack-overflow"></i>
-                        </a>
-                        <a href="https://github.com/GuglielmoCerri" target="_blank" class="home__social-icon">
-                            <i class="uil uil-github-alt"></i>
-                        </a>
-                        <a href="https://medium.com/@cerriguglielmo" target="_blank" class="home__social-icon">
-                            <i class="uil uil-medium-m"></i>
-                        </a>
-                    </div>
-
-                    <div class="home__img">
-                        <svg class="home__blob" viewBox="0 0 200 187" xmlns="http://www.w3.org/2000/svg"
-                            xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <mask id="mask0" mask-type="alpha">
-                                <path d="M190.312 36.4879C206.582 62.1187 201.309 102.826 182.328 134.186C163.346 165.547
-            130.807 187.559 100.226 186.353C69.6454 185.297 41.0228 161.023 21.7403 129.362C2.45775
-            97.8511 -7.48481 59.1033 6.67581 34.5279C20.9871 10.1032 59.7028 -0.149132 97.9666
-            0.00163737C136.23 0.303176 174.193 10.857 190.312 36.4879Z" />
-                            </mask>
-                            <g mask="url(#mask0)">
-                                <path d="M190.312 36.4879C206.582 62.1187 201.309 102.826 182.328 134.186C163.346
-            165.547 130.807 187.559 100.226 186.353C69.6454 185.297 41.0228 161.023 21.7403
-            129.362C2.45775 97.8511 -7.48481 59.1033 6.67581 34.5279C20.9871 10.1032 59.7028
-            -0.149132 97.9666 0.00163737C136.23 0.303176 174.193 10.857 190.312 36.4879Z" />
-                                <image class="home__blob-img" x="12" y="18" xlink:href="assets/img/perfil.png" />
-                            </g>
-                        </svg>
-
-                    </div>
-                    <div class="home__data">
-                        <h1 class="home__title">Hello from Mohammad,</h1>
-                        <h3 class="home__subtitle">Data scientist and Bioinformatician</h3>
-                        <p class="home__description">Advanced expertise in developing and managing high-quality machine
-                            learning algorithms and in crafting bioinformatics web applications </p>
-                        <a href="#contact" class="button button--flex">
-                            Contact Me <i class="uil uil-message button__icon"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="home_scroll">
-                    <a href="#about" class="home__scroll-button button--flex">
-                        <i class="uil uil-mouse-alt home__scroll-mouse"></i>
-                        <span class="home__scroll-name">Scroll down</span>
-                        <i class="uil uil-arrow-down homw__scroll-arrow"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-        
-        <!--==================== ABOUT ====================-->
-        <section class="about section" id="about">
-            <h2 class="section__title"> About Me</h2>
-            <span class="section__subtitle">My introduction</span>
-
-            <div class="about__container container grid">
-                <img src="assets/img/about.jpg" alt="" class="about__img">
-
-                <div class="about__data">
-                    <p class="about__description">
-                        Data scientist, with extensive experience in machine learning models
-                        and algorithm development, adept in web technologies and bioinformatics 
-                        application management.
-                    </p>
-
-                    <div class="about__info">
-                        <div>
-                            <span class="about__info-title">03+</span>
-                            <span class="about__info-name">Years <br> experience </span>
-                        </div>
-
-                        <div>
-                            <span class="about__info-title">03+</span>
-                            <span class="about__info-name">Companies <br> worked </span>
-                        </div>
-
-                        <div>
-                            <span class="about__info-title">15+</span>
-                            <span class="about__info-name">Completed <br> projects </span>
-                        </div>
-                    </div>
-                    <div class="about__buttons">
-                        <a download="" href="assets/pdf/Guglielmo_Cerri_CV.pdf" class="button button--flex">
-                            Download CV <i class="uil uil-download-alt button__icon"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <!--==================== SKILLS ====================-->
-        <section class="skills section" id="skills">
-            <h2 class="section__title">Skills</h2>
-            <span class="section__subtitle">My technical level</span>
-
-            <div class="skills__container container grid">
-                <div>
-                    <!--====================== SKILLS 1 =============================-->
-                    <div class="skills__content skills__open">
-                        <div class="skills__header">
-                            <i class="uil uil-code-branch skills__icon"></i>
-
-                            <div>
-                                <h1 class="skills__title">Programming Languages</h1>
-                                <span class="skills__subtitle">Several years of experience</span>
-                            </div>
-
-                            <i class="uil uil-angle-down skills__arrow"></i>
-                        </div>
-
-                        <div class="skills__list grid">
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">Python</h3>
-                                    <div class="skills__number">95%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__python"></div>
-                                </div>
-                            </div>
-
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">Java</h3>
-                                    <div class="skills__number">40%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__java"></div>
-                                </div>
-                            </div>
-
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">R</h3>
-                                    <div class="skills__number">90%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__r"></div>
-                                </div>
-                            </div>
-
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">C++</h3>
-                                    <div class="skills__number">75%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__cplusplus"></div>
-                                </div>
-                            </div>
-
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">C</h3>
-                                    <div class="skills__number">65%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__c"></div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!--====================== SKILLS 2 =============================-->
-                <div class="skills__content skills__open">
-                    <div class="skills__header">
-                        <i class="uil uil-atom skills__icon"></i>
-
-                        <div>
-                            <h1 class="skills__title">Technologies</h1>
-                            <span class="skills__subtitle">Several years of experience</span>
-                        </div>
-
-                        <i class="uil uil-angle-down skills__arrow"></i>
-                    </div>
-
-                    <div class="skills__list grid">
-                        <div class="skills__data">
-                            <div class="skills__titles">
-                                <h3 class="skills__name">Docker</h3>
-                                <div class="skills__number">85%</div>
-                            </div>
-                            <div class="skills__bar">
-                                <div class="skills__percentage skills__docker"></div>
-                            </div>
-                        </div>
-
-                        <div class="skills__data">
-                            <div class="skills__titles">
-                                <h3 class="skills__name">Kubernetes</h3>
-                                <div class="skills__number">30%</div>
-                            </div>
-                            <div class="skills__bar">
-                                <div class="skills__percentage skills__kubernetes"></div>
-                            </div>
-                        </div>
-
-                        <div class="skills__data">
-                            <div class="skills__titles">
-                                <h3 class="skills__name">Git</h3>
-                                <div class="skills__number">90%</div>
-                            </div>
-                            <div class="skills__bar">
-                                <div class="skills__percentage skills__git"></div>
-                            </div>
-                        </div>
-
-                        <div class="skills__data">
-                            <div class="skills__titles">
-                                <h3 class="skills__name">React Native</h3>
-                                <div class="skills__number">80%</div>
-                            </div>
-                            <div class="skills__bar">
-                                <div class="skills__percentage skills__reactnative"></div>
-                            </div>
-                        </div>
-
-                        <div class="skills__data">
-                            <div class="skills__titles">
-                                <h3 class="skills__name">Bash</h3>
-                                <div class="skills__number">85%</div>
-                            </div>
-                            <div class="skills__bar">
-                                <div class="skills__percentage skills__bash"></div>
-                            </div>
-                        </div>
-
-                        <div class="skills__data">
-                            <div class="skills__titles">
-                                <h3 class="skills__name">Bootstrap</h3>
-                                <div class="skills__number">80%</div>
-                            </div>
-                            <div class="skills__bar">
-                                <div class="skills__percentage skills__bootstrap"></div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!--====================== SKILLS 3 =============================-->
-                    <div class="skills__content skills__open">
-                        <div class="skills__header">
-                            <i class="uil uil-database skills__icon"></i>
-
-                            <div>
-                                <h1 class="skills__title">Database Systems</h1>
-                                <span class="skills__subtitle">Several years of experience</span>
-                            </div>
-
-                            <i class="uil uil-angle-down skills__arrow"></i>
-                        </div>
-
-                        <div class="skills__list grid">
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">MySQL</h3>
-                                    <div class="skills__number">70%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__mysql"></div>
-                                </div>
-                            </div>
-
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">PostgreSQL</h3>
-                                    <div class="skills__number">70%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__postgresql"></div>
-                                </div>
-                            </div>
-
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">Microsoft SQL Server</h3>
-                                    <div class="skills__number">85%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__mssqlserver"></div>
-                                </div>
-                            </div>
-
-                            <div class="skills__data">
-                                <div class="skills__titles">
-                                    <h3 class="skills__name">MongoDB</h3>
-                                    <div class="skills__number">80%</div>
-                                </div>
-                                <div class="skills__bar">
-                                    <div class="skills__percentage skills__mongo"></div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!--==================== QUALIFICATION ====================-->
-        <section class="qualification section" id="qualifications">
-            <h2 class="section__title">Qualifications</h2>
-            <div class="section__subtitle">My personal journey</div>
-
-            <div class="qualification__container container">
-                <div class="qualification__tabs">
-                    <div class="qualification__button button--flex qualification__active" data-target="#education">
-                        <i class="uil uil-graduation-cap qualification__icon"></i>
-                        Education
-                    </div>
-
-                    <div class="qualification__button button--flex" data-target="#work">
-                        <i class="uil uil-briefcase-alt qualification__icon"></i>
-                        Work
-                    </div>
-                </div>
-
-                <div class="qualification__sections">
-                    <!--===============================QUALIFICATION CONTENT 1 ===========================-->
-                    <div class="qualification__content qualification__active" data-content id="education">
-                        <!--===============================QUALIFICATION 1 ===========================-->
-                        <div class="qualification__data">
-                            <div>
-                                <h3 class="qualification__title">M.Sc. in Medical Bioinformatics</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://www.corsi.univr.it/?ent=cs&id=769" target="_blank">University of
-                                        Verona, IT</a>
-                                        <br>
-                                        <h5>110/110 wiht honors</h5>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    2018 - 2020
-                                </div>
-                            </div>
-
-                            <div>
-                                <span class="qualification__rounder"></span>
-                                <span class="qualification__line"></span>
-                            </div>
-                        </div>
-
-                        <!--===============================QUALIFICATION 2 ===========================-->
-                        <div class="qualification__data">
-                            <div></div>
-                            <div>
-                                <span class="qualification__rounder"></span>
-                            </div>
-
-                            <div>
-                                <h3 class="qualification__title">B.Sc. in Computer Science</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://web.dmi.unict.it/corsi/l-31" target="_blank">Univerity of
-                                        Catania, IT</a>
-                                        <br>
-                                        <h5>110/110 wiht honors</h5>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    2015 - 2018
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--===============================QUALIFICATION CONTENT 2 ===========================-->
-                    <div class="qualification__content" data-content id="work">
-                        <!--===============================QUALIFICATION 1 ===========================-->
-                        <div class="qualification__data">
-                            <div>
-                                <h3 class="qualification__title">Bioinformatician</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://www.cogentech.it" target="_blank">Cogentech s.r.l.</a>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    June 2022 - Present
-                                </div>
-                            </div>
-
-                            <div>
-                                <span class="qualification__rounder"></span>
-                                <span class="qualification__line"></span>
-                            </div>
-                        </div>
-
-                        <!--===============================QUALIFICATION 2 ===========================-->
-                        <div class="qualification__data">
-                            <div></div>
-                            <div>
-                                <span class="qualification__rounder"></span>
-                                <span class="qualification__line"></span>
-                            </div>
-
-                            <div>
-                                <h3 class="qualification__title">Artificial Intelligence Specialist</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://www.fire.eu" target="_blank">Fire Group s.p.a.</a>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    Sep 2021 - Jun 2022
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--===============================QUALIFICATION 3 ===========================-->
-                        <div class="qualification__data">
-                            <div>
-                                <h3 class="qualification__title">Research Fellow</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://www.univr.it/it/" target="_blank">University of Verona</a>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    Nov 2020 - Aug 2021
-                                </div>
-                            </div>
-
-                            <div>
-                                <span class="qualification__rounder"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!--==================== Expertise ====================-->
-        <section class="expertise section" id="expertise">
-            <h2 class="section__title">Expertise</h2>
-            <span class="section__subtitle">Areas of Interest</span>
-
-            <div class="Expertise__container container grid">
-                <!--===================== Expertise 1 ====================-->
-                <div class="Expertise__content">
-                    <div>
-                        <i class="uil uil-chart-line Expertise__icon"></i>
-                        <h3 class="Expertise__title">Data Science</h3>
-                        <span class="button button--flex button--small button--link Expertise__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="Expertise__modal">
-                            <div class="Expertise__modal-content">
-                                <h3 class="Expertise__modal-title">Data Science</h3>
-                                <i class="uil uil-times Expertise__modal-close"></i>
-                                
-                                <ul class="Expertise__modal-expertise grid">
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I perform extensive data analysis and interpretation to understand patterns
-                                            and trends.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I manage and optimize data systems, and design algorithms for data mining and
-                                            research purposes.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I provide actionable insights based on data analysis.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--===================== Expertise 2 ====================-->
-                <div class="Expertise__content">
-                    <div>
-                        <i class="uil uil-brain Expertise__icon"></i>
-                        <h3 class="Expertise__title">Artificial Intelligence</h3>
-
-                        <span class="button button--flex button--small button--link Expertise__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="Expertise__modal">
-                            <div class="Expertise__modal-content">
-                                <h4 class="Expertise__modal-title">Artificial Intelligence</h4>
-                                <i class="uil uil-times Expertise__modal-close"></i>
-
-                                <ul class="Expertise__modal-expertise grid">
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I develop and implement advanced AI models, including deep learning and
-                                            neural networks.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I specialize in creating intelligent chatbots for a variety of applications,
-                                            enhancing customer service and engagement.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I build and maintain scalable AI solutions in production.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I collaborate with cross-functional teams to understand business
-                                            requirements and design effective AI systems.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--===================== Expertise 3 ====================-->
-                <div class="Expertise__content">
-                    <div>
-                        <i class="uil uil-robot Expertise__icon"></i>
-                        <h3 class="Expertise__title">Python & Automation</h3>
-
-                        <span class="button button--flex button--small button--link Expertise__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="Expertise__modal">
-                            <div class="Expertise__modal-content">
-                                <h4 class="Expertise__modal-title">Python & Automation</h4>
-                                <i class="uil uil-times Expertise__modal-close"></i>
-
-                                <ul class="Expertise__modal-expertise grid">
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I develop efficient and robust Python applications, optimized for performance
-                                            and scalability.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I design and implement automated processes, including the creation of bots,
-                                            to streamline operations of all types, including business processes, thereby
-                                            improving productivity and accuracy.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--===================== Expertise 4 ====================-->
-                <div class="Expertise__content">
-                    <div>
-                        <i class="uil uil-web-grid Expertise__icon"></i>
-                        <h3 class="Expertise__title">Web Develop</h3>
-
-                        <span class="button button--flex button--small button--link Expertise__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="Expertise__modal">
-                            <div class="Expertise__modal-content">
-                                <h4 class="Expertise__modal-title">Web Develop</h4>
-                                <i class="uil uil-times Expertise__modal-close"></i>
-
-                                <ul class="Expertise__modal-expertise grid">
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I create responsive and user-friendly websites using HTML, CSS, Bootstrap and
-                                            JavaScript.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I ensure optimal website performance and design aesthetics across various
-                                            devices and browsers.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--===================== Expertise 5 ====================-->
-                <div class="Expertise__content">
-                    <div>
-                        <i class="uil uil-dna Expertise__icon"></i>
-                        <h3 class="Expertise__title">Bioinformatics</h3>
-
-                        <span class="button button--flex button--small button--link Expertise__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="Expertise__modal">
-                            <div class="Expertise__modal-content">
-                                <h4 class="Expertise__modal-title">Bioinformatics</h4>
-                                <i class="uil uil-times Expertise__modal-close"></i>
-
-                                <ul class="Expertise__modal-expertise grid">
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I leverage bioinformatics tools and techniques for comprehensive analysis of biological data.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>Integration of computational and biological sciences to extract meaningful insights from
-                                            complex biological systems.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-            </div>
-        </section>
-
-        <!--==================== PORTFOLIO ====================-->
-        <section class="portfolio section" id="portfolio">
-            <h2 class="section__title">Portfolio</h2>
-            <span class="section__subtitle">Most Recent Work</span>
-
-            <div class="portfolio__container container swiper-container">
-                <div class="swiper-wrapper">
-
-                    <!--======================== PORTFOLIO 1 =============-->
-                    <div class="portfolio__content grid swiper-slide">
-                        <img src="assets/img/portfolio1.gif" alt="" class="portfolio__img" loading="lazy">
-
-                        <div class="portfolio__data">
-                            <h3 class="portfolio__title">PyTorch Dino AI Game</h3>
-                            <p class="portfolio__description">
-                                Training an AI model to play the Chrome Dino Game using PyTorch and
-                                EfficientNet.
-                            </p>
-                            <a href="https://github.com/GuglielmoCerri/pytorch-dino-ai-game"
-                                class="button button--flex button--small portfolio__button">
-                                View
-                                <i class="uil uil-arrow-right button__icon"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!--======================== PORTFOLIO 2 =============-->
-                    <div class="portfolio__content grid swiper-slide">
-                        <img src="assets/img/portfolio2.gif" alt="" class="portfolio__img" loading="lazy">
-
-                        <div class="portfolio__data">
-                            <h3 class="portfolio__title">Advent of Code</h3>
-                            <p class="portfolio__description">
-                                Solutions to the AoC calendar problems puzzles for 2021 and 2022 with Python. The
-                                solutions have been added to the
-                                <a href="https://github.com/Bogdanp/awesome-advent-of-code">awesome-advent-of-code
-                                    repository.</a>
-                            </p>
-                            <a href="#" class="button button--flex button--small portfolio__button">
-                                View
-                                <i class="uil uil-arrow-right button__icon"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!--======================== PORTFOLIO 3 =============-->
-                    <div class="portfolio__content grid swiper-slide">
-                        <img src="assets/img/portfolio3.jpg" alt="Featurewiz Logo" class="portfolio__img" loading="lazy">
-
-                        <div class="portfolio__data">
-                            <h3 class="portfolio__title">Featurewiz</h3>
-                            <p class="portfolio__description">
-                                Contributions to Featurewiz, an open source advanced machine learning library to perform
-                                Feature Selection and Feature Engineering.
-                            </p>
-                            <a href="#" class="button button--flex button--small portfolio__button">
-                                View
-                                <i class="uil uil-arrow-right button__icon"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!--======================== PORTFOLIO 4 =============-->
-                    <div class="portfolio__content grid swiper-slide">
-                        <img src="assets/img/portfolio4.gif" alt="" class="portfolio__img" loading="lazy">
-
-                        <div class="portfolio__data">
-                            <h3 class="portfolio__title">Bamsurgeon</h3>
-                            <p class="portfolio__description">
-                                Contributions to Bamsurgeon, a set of tools for adding genomic variants to SAM/BAM/CRAM
-                                files,
-                                for testing variant callers.
-                            </p>
-                            <a href="#" class="button button--flex button--small portfolio__button">
-                                View
-                                <i class="uil uil-arrow-right button__icon"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <!--======================== PORTFOLIO 5 =============-->
-                    <div class="portfolio__content grid swiper-slide">
-                        <img src="assets/img/portfolio5.png" alt="" class="portfolio__img" loading="lazy">
-
-                        <div class="portfolio__data">
-                            <h3 class="portfolio__title">IMDb Sentiment Analysis</h3>
-                            <p class="portfolio__description">
-                                Analysis (with NLP techniques) and binary sentiment classification on movie reviews from the IMDb dataset .
-                            </p>
-                            <a href="https://github.com/GuglielmoCerri/IMDb-Sentiment-Analysis/tree/main" class="button button--flex button--small portfolio__button">
-                                View
-                                <i class="uil uil-arrow-right button__icon"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            
-                <!--============ Add Pagination =============-->
-                <div class="swiper-pagination swiper-pagination-portfolio"></div>
-            </div>
-        </section>
-
-        <!--==================== ARTICLES ====================-->
-        <section class="articles section" id="articles">
-                <h2 class="section__title">Medium Articles</h2>
-                <span class="section__subtitle">See some of my published articles</span>
-                <div class="articles__container container swiper-container">
-                    <div class="swiper-wrapper">
-                    <!--==================== ARTICLE 1 ====================-->
-                    <div class="articles__content swiper-slide">
-                        <div class="card">
-                        <a href="https://medium.com/gitconnected/a-developers-guide-to-working-with-apis-d5c8aa4e0284">
-                            <h4>🛠️ A Developer's Guide to Working with APIs</h4>
-                            <p class="journal">Published on Level Up Coding</p>
-                            <p>Master using APIs in Python! Learn why APIs are crucial, how to use them, and the
-                                differences between REST and GraphQL.</p>
-                        </a>
-                        </div>
-                    </div>
-                <!--==================== ARTICLE 2 ====================-->
-                <div class="articles__content swiper-slide">
-                    <div class="card">
-                        <a href="https://medium.com/python-in-plain-english/python-the-glittering-jewel-of-modern-technology-972976c130f4">
-                            <h4>🐍 Python: The Glittering Jewel of Modern Technology</h4>
-                            <p class="journal">Published on Python in Plain English</p>
-                            <p>Uncover the transformative role of Python, the versatile jewel of modern technology, driving innovation across AI, ML and web development.</p>
-                        </a>
-                    </div>
-                </div>
-                <!--==================== ARTICLE 3 ====================-->
-                <div class="articles__content swiper-slide">
-                    <div class="card">
-                        <a href="https://medium.com/gitconnected/secrets-to-a-killer-data-science-portfolio-projects-that-will-skyrocket-your-career-67089b924929">
-                            <h4>🚀 Secrets to a Killer Data Science Portfolio: Projects that Will Skyrocket Your Career
-                            </h4>
-                            <p class="journal">Published on Level Up Coding</p>
-                            <p>Unlock the secrets to a powerful data science portfolio that propels your career to new
-                                heights.</p>
-                        </a>
-                    </div>
-                </div>
-                <!--==================== ARTICLE 4 ====================-->
-                <div class="articles__content swiper-slide">
-                    <div class="card">
-                        <a href="https://medium.com/gitconnected/building-a-deep-learning-model-with-tensorflow-and-keras-easier-than-you-think-62d0cb7945ff">
-                            <h4>🧠 Building a Deep Learning Model with TensorFlow and Keras: Easier Than You Think</h4>
-                            <p class="journal">Published on Level Up Coding</p>
-                            <p>Master the art of Deep Learning with TensorFlow and Keras. A step-by-step guide to your
-                                first model.</p>
-                        </a>
-                    </div>
-                </div>
-                <!--==================== ARTICLE 5 ====================-->
-                <div class="articles__content swiper-slide">
-                    <div class="card">
-                        <a href="https://medium.com/mlearning-ai/creating-a-chatbot-with-python-5598e9a5f993">
-                            <h4>💬 Creating a Chatbot with Python</h4>
-                            <p class="journal">Published on MLearning.ai</p>
-                            <p>Learn how to create a simple chatbot using Python and NLP techniques. Create an
-                                intelligent conversational agent.</p>
-                        </a>
-                    </div>
-                </div>
-                <!--==================== ARTICLE 6 ====================-->
-                <div class="articles__content swiper-slide">
-                    <div class="card">
-                        <a href="https://medium.com/gitconnected/design-patterns-in-python-a-practical-guide-to-writing-maintainable-code-a3f780a4a6ad">
-                            <h4>📝 Design Patterns in Python: A Practical Guide to Writing Maintainable Code</h4>
-                            <p class="journal">Published on Level Up Coding</p>
-                            <p>Discover essential design patterns in Python for writing maintainable code, for beginner and experienced Python developer.</p>
-                        </a>
-                    </div>
-                </div>
-            </div>
-                <!-- Add Pagination -->
-                <div class="swiper-pagination swiper-pagination-articles"></div>
-            </div>
-        </section>
-
-        <!--==================== PROJECT IN MIND ====================-->
-        <section class="project section">
-            <div class="project__bg">
-                <div class="project__container container grid">
-                    <div class="project__data">
-                        <h2 class="project__title">> Would you like to get to know me better?
-                            <br>
-                            > You want to collaborate with me?</h2>
-                        <p class="project__description">Contact me now!</p>
-                        <div class="centered-container">
-                        <a href="#contact" class="button button--flex button--white">
-                            Contact Me
-                            <i class="uil uil-message project__icon button__icon button__contact"></i>
-                        </a>
-                    </div>
-                    </div>
-                </div>
-            </div>
-</div>
-        </section>
-
-        <!--==================== CONTACT ME ====================-->
-        <section class="contact section" id="contact">
-            <h2 class="section__title">Contact Me</h2>
-            <span class="section__subtitle">Get in touch</span>
-
-            <div class="contact__container container grid">
-                <div>
-                    <div class="contact__information">
-                        <i class="uil uil-telegram-alt contact__icon"></i>
-
-                        <div>
-                            <h3 class="contact__title">Telegram</h3>
-                            <span class="contact__subtitle">@GuglielmoCerri</span>
-                        </div>
-                    </div>
-
-                    <div class="contact__information">
-                        <i class="uil uil-envelope contact__icon"></i>
-
-                        <div>
-                            <h3 class="contact__title">Email</h3>
-                            <span class="contact__subtitle">cerriguglielmo@gmail.com</span>
-                        </div>
-                    </div>
-
-                    <div class="contact__information">
-                        <i class="uil uil-map-marker contact__icon"></i>
-
-                        <div>
-                            <h3 class="contact__title">Location</h3>
-                            <span class="contact__subtitle">Italy, IT</span>
-                        </div>
-                    </div>
-                        
-                    <form action="https://formspree.io/f/xbjwkqok" method="POST" class="contact__form grid" id="submit_form">
-                        <div class="contact__inputs grid">
-                            <div class="contact__content">
-                                <label for="name" class="contact__label">Name</label>
-                                <input type="text" id="name" name="name" class="contact__input" required>
-                            </div>
-
-                            <div class="contact__content">
-                                <label for="email" class="contact__label" placeholder="email@example.com">Email</label>
-                                <input type="email" id="email" name="email" class="contact__input" required>
-                            </div>
-                        </div>
-
-                        <div class="contact__content">
-                            <label for="project-contact" class="contact__label">Subject</label>
-                            <input type="text" id="project-contact" name="project" class="contact__input" required>
-                        </div>
-
-                        <div class="contact__content">
-                            <label for="message-contact" class="contact__label">Message</label>
-                            <textarea name="message" cols="0" rows="7" id="message-contact"
-                                class="contact__input" required></textarea>
-                        </div>
-
-                        <div class="g-recaptcha" data-sitekey="6Ldv3yMpAAAAAJBnsyuM_we1OQjiUtK-dUEW5Kdu"></div>
-
-                        <div style="text-align: center;">
-                            <button class="button button--flex" id="check">
-                                Send Message
-                                <i class="uil uil-message button__icon"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </section>
-
-    </main>
-    
-    <!--==================== FOOTER ====================-->
-    <footer class="footer" id="footer">
-        <div class="footer__bg">
-            <div class="footer__container container grid">
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <h2 class="footer__title">Guglielmo Cerri</h2>
-                    <span class="footer__subtitle">Data scientist and Bioinformatician</span>
-                </div>
-
-                <ul class="footer__links" style="align-self: center;">
-                    <li>
-                        <a href="#expertise" class="footer__link">Expertise</a>
-                    </li>
-
-                    <li>
-                        <a href="#portfolio" class="footer__link">Portfolio</a>
-                    </li>
-
-                    <li>
-                        <a href="#contact" class="footer__link">Contact Me</a>
-                    </li>
-                </ul>
-
-                <div class="footer__socials" style="align-self: center;">
-                    <a href="https://twitter.com/GuglielmoCerri" class="footer__social" target="_blank">
-                        <i class="uil uil-twitter-alt"></i>
-                    </a>
-
-                    <a href="https://medium.com/@cerriguglielmo" target="_blank"
-                        class="footer__social">
-                        <i class="uil uil-medium-m"></i>
-                    </a>
-
-                    <a href="https://www.linkedin.com/in/guglielmocerri/" target="_blank" class="footer__social">
-                        <i class="uil uil-linkedin-alt"></i>
-                    </a>
-                </div>
-            </div>
-
-            <p class="footer__copy" style="margin-top: 10px;">&#169; Guglielmo Cerri. All rights reserved.</p>
+<!-- NAV -->
+<nav>
+  <span class="nav-name">M. H. Modirrousta</span>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#papers">Papers</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#awards">Awards</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-label fade-in">PhD Researcher · University of Alberta</div>
+    <h1 class="fade-in delay-1">Mohammad Hossein<br>Modirrousta</h1>
+    <p class="hero-tagline fade-in delay-2">
+      Machine learning researcher working at the intersection of AI, process control, and industrial systems. Building intelligent solutions for fault detection, causal discovery, and data-driven engineering.
+    </p>
+    <div class="hero-links fade-in delay-3">
+      <a href="mailto:mohammadmodir2@gmail.com" class="btn btn-primary">Get in Touch</a>
+      <a href="https://scholar.google.com/citations?user=1ALTxekAAAAJ&hl=en" target="_blank" class="btn btn-outline">Google Scholar</a>
+      <a href="https://github.com/mo26-web" target="_blank" class="btn btn-outline">GitHub</a>
+      <a href="https://www.linkedin.com/in/mohammad-hossein-modirrousta/" target="_blank" class="btn btn-outline">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label">About</div>
+    <h2>Who I Am</h2>
+    <div class="divider"></div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>
+          I am a PhD candidate in Chemical and Materials Engineering (Process Control) at the University of Alberta, supervised by Dr. Biao Huang. My research focuses on applying deep learning, probabilistic models, and reinforcement learning to real-world industrial challenges.
+        </p>
+        <p>
+          Prior to my PhD, I completed my M.Sc. at Khajeh Nasir Toosi University of Technology, graduating ranked 1st in my cohort with a GPA of 19.56/20. My thesis developed a recommender system via deep reinforcement learning and GANs for gas turbine fault detection.
+        </p>
+        <p>
+          I am passionate about bridging the gap between AI research and industrial practice — from causal discovery in process systems to anomaly detection in networked environments.
+        </p>
+      </div>
+      <div class="about-cards">
+        <div class="about-card">
+          <div class="card-label">Current Position</div>
+          <div class="card-val">PhD Candidate, University of Alberta</div>
         </div>
-    </footer>
+        <div class="about-card">
+          <div class="card-label">Research Focus</div>
+          <div class="card-val">AI, Process Control, Fault Detection, Causal Discovery</div>
+        </div>
+        <div class="about-card">
+          <div class="card-label">Location</div>
+          <div class="card-val">Edmonton, AB, Canada</div>
+        </div>
+        <div class="about-card">
+          <div class="card-label">Research Interests</div>
+          <div class="card-val">Intelligent Control · IoT & Industrial Data · Computer Vision · Reinforcement Learning</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-inner">
+    <div class="section-label">Experience</div>
+    <h2>Education & Work</h2>
+    <div class="divider"></div>
+    <div class="timeline">
 
-    <!--==================== SCROLL TOP ====================-->
-    <a href="" class="scrollup" id="scroll-up">
-        <i class="uil uil-arrow-up scroll__icon"></i>
-    </a>
+      <div class="timeline-item">
+        <div class="t-year">2023 – Present</div>
+        <div>
+          <div class="t-role">PhD in Chemical & Materials Engineering</div>
+          <div class="t-place">University of Alberta · Edmonton, Canada</div>
+          <div class="t-desc">Process Control group under Dr. Biao Huang. Researching AI-driven fault detection, causal discovery, and physics-informed machine learning for industrial systems.</div>
+        </div>
+      </div>
 
-    <!--==================== SWIPER JS ====================-->
-    <script src="assets/js/swiper-bundle.min.js"></script>
+      <div class="timeline-item">
+        <div class="t-year">2025 – Present</div>
+        <div>
+          <div class="t-role">Assistant Manager, Process Control Lab</div>
+          <div class="t-place">University of Alberta</div>
+          <div class="t-desc">Managing laboratory operations and safety for the Process Control research group.</div>
+        </div>
+      </div>
 
-    <!--==================== MAIN JS ====================-->
-    <script src="assets/js/main.js"></script>
+      <div class="timeline-item">
+        <div class="t-year">2020 – 2023</div>
+        <div>
+          <div class="t-role">M.Sc. in Electrical Engineering (Control)</div>
+          <div class="t-place">Khajeh Nasir Toosi University of Technology · Tehran, Iran</div>
+          <div class="t-desc">GPA 19.56/20 — Ranked 1st. Thesis: Recommender system via deep reinforcement learning and GAN for fault detection in gas turbines.</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="t-year">2022 – 2023</div>
+        <div>
+          <div class="t-role">AI Research Engineer</div>
+          <div class="t-place">APAC Research Group · Tehran, Iran</div>
+          <div class="t-desc">Developed AI solutions for autonomous driving systems and industrial control applications.</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="t-year">2021 – 2022</div>
+        <div>
+          <div class="t-role">Computer Vision Engineer</div>
+          <div class="t-place">AICell Startup · Tehran, Iran</div>
+          <div class="t-desc">Developed computer vision algorithms for production-level applications.</div>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="t-year">2016 – 2020</div>
+        <div>
+          <div class="t-role">B.Sc. in Electrical Engineering (Control)</div>
+          <div class="t-place">Khajeh Nasir Toosi University of Technology · Tehran, Iran</div>
+          <div class="t-desc">GPA 17.4/20. Thesis: Converting IEC 61131 ST programs to C for microcontroller implementation.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-inner">
+    <div class="section-label">Skills</div>
+    <h2>Technical Toolkit</h2>
+    <div class="divider"></div>
+    <div class="skills-grid">
+      <div class="skill-group">
+        <h4>Machine Learning</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Deep Learning</span>
+          <span class="skill-tag">Reinforcement Learning</span>
+          <span class="skill-tag">GAN</span>
+          <span class="skill-tag">Transformers</span>
+          <span class="skill-tag">Bayesian ML</span>
+          <span class="skill-tag">Causal Discovery</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Frameworks</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">PyTorch</span>
+          <span class="skill-tag">TensorFlow</span>
+          <span class="skill-tag">Keras</span>
+          <span class="skill-tag">scikit-learn</span>
+          <span class="skill-tag">OpenAI Gym</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Programming</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">MATLAB</span>
+          <span class="skill-tag">C/C++</span>
+          <span class="skill-tag">SQL</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Domains</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Fault Detection</span>
+          <span class="skill-tag">Process Control</span>
+          <span class="skill-tag">Computer Vision</span>
+          <span class="skill-tag">Anomaly Detection</span>
+          <span class="skill-tag">NLP / RAG</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Tools</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">Git</span>
+          <span class="skill-tag">Docker</span>
+          <span class="skill-tag">Linux</span>
+          <span class="skill-tag">LaTeX</span>
+          <span class="skill-tag">Jupyter</span>
+        </div>
+      </div>
+      <div class="skill-group">
+        <h4>Process Engineering</h4>
+        <div class="skill-tags">
+          <span class="skill-tag">IEC 61131</span>
+          <span class="skill-tag">PID Control</span>
+          <span class="skill-tag">System Identification</span>
+          <span class="skill-tag">Industrial IoT</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAPERS -->
+<section id="papers">
+  <div class="section-inner">
+    <div class="section-label">Publications</div>
+    <h2>Research Papers</h2>
+    <div class="divider"></div>
+    <div class="papers-list">
+
+      <div class="paper-card">
+        <div class="paper-venue">Computers & Chemical Engineering · 2025</div>
+        <div class="paper-title">Oscillation Analysis Using Retrieval Augmented Generation</div>
+        <div class="paper-authors">Singh, A., Modirrousta, M., and Huang, B.</div>
+        <a href="https://doi.org/10.1016/j.compchemeng.2025.109489" target="_blank" class="paper-link">→ doi.org/10.1016/j.compchemeng.2025.109489</a>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">Computers & Chemical Engineering · 2025</div>
+        <div class="paper-title">Causal Discovery in Industrial Systems via Physics-Guided Variational Attention and Probabilistic Interventions</div>
+        <div class="paper-authors">Modirrousta, M., Memarian, A., and Huang, B.</div>
+        <a href="https://doi.org/10.1016/j.compchemeng.2025.109420" target="_blank" class="paper-link">→ doi.org/10.1016/j.compchemeng.2025.109420</a>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">Computers & Chemical Engineering · 2025</div>
+        <div class="paper-title">Entropy-Enhanced Batch Sampling and Conformal Learning in VGAE for Physics-Informed Causal Discovery and Fault Diagnosis</div>
+        <div class="paper-authors">Modirrousta, M., Memarian, A., and Huang, B.</div>
+        <a href="https://doi.org/10.1016/j.compchemeng.2025.109053" target="_blank" class="paper-link">→ doi.org/10.1016/j.compchemeng.2025.109053</a>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">IEEE Transactions on Reliability · Under Review</div>
+        <div class="paper-title">Operator-in-the-loop Bayesian Variational iTransformer for Fault Detection <span class="paper-status">Under Review</span></div>
+        <div class="paper-authors">Memarian, A., Modirrousta, M., and Huang, B.</div>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">International Journal of Dynamics and Control · 2025</div>
+        <div class="paper-title">Design of Optimal Model-Free PI Controllers Using Metaheuristic Algorithms for a Distillation Column</div>
+        <div class="paper-authors">Pazoki, D., Sarbandi, M., Kazemi, R., Modirrousta, M., et al.</div>
+        <a href="https://doi.org/10.1007/s40435-025-01822-3" target="_blank" class="paper-link">→ doi.org/10.1007/s40435-025-01822-3</a>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">IET Collaborative Intelligent Manufacturing · 2024</div>
+        <div class="paper-title">Imbalanced Classification In Faulty Turbine Data: New Proximal Policy Optimisation</div>
+        <div class="paper-authors">Modirrousta, M., Aliyari, M., and Yari, M.</div>
+        <a href="https://doi.org/10.1049/cim2.12114" target="_blank" class="paper-link">→ doi.org/10.1049/cim2.12114</a>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">CAAI Transactions on Intelligence Technology · 2024</div>
+        <div class="paper-title">Analysis of Anomalous Behaviour in Network Systems Using Deep Reinforcement Learning with Convolutional Neural Network Architecture</div>
+        <div class="paper-authors">Modirrousta, M., et al.</div>
+        <a href="https://doi.org/10.1049/cit2.12359" target="_blank" class="paper-link">→ doi.org/10.1049/cit2.12359</a>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">CAAI Transactions on Intelligence Technology · 2023</div>
+        <div class="paper-title">GAN-LSTM-3D: An Efficient Method for Lung Tumor 3D Reconstruction Enhanced by Attention-based LSTM</div>
+        <div class="paper-authors">Hong, Lu., Modirrousta, M., et al.</div>
+        <a href="https://doi.org/10.1049/cit2.12223" target="_blank" class="paper-link">→ doi.org/10.1049/cit2.12223</a>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">IET Collaborative Intelligent Manufacturing · 2023</div>
+        <div class="paper-title">Deep Q-Learning Recommender Algorithm with Update Policy for a Real Steam Turbine System</div>
+        <div class="paper-authors">Modirrousta, M. H., Aliyari Shoorehdeli, M., Yari, M., &amp; Ghahremani, A.</div>
+        <a href="https://doi.org/10.1049/cim2.12081" target="_blank" class="paper-link">→ doi.org/10.1049/cim2.12081</a>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-venue">International Journal of Intelligent Systems · Under Review</div>
+        <div class="paper-title">Network Intrusion Detection with Limited Labeled Data <span class="paper-status">Under Review</span></div>
+        <div class="paper-authors">Lotfi, S., Modirrousta, M., Shashaani, S., Amini, S., and Aliyari, M.</div>
+        <a href="https://doi.org/10.48550/arXiv.2209.03147" target="_blank" class="paper-link">→ arXiv preprint</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AWARDS -->
+<section id="awards">
+  <div class="section-inner">
+    <div class="section-label">Recognition</div>
+    <h2>Honors &amp; Awards</h2>
+    <div class="divider"></div>
+    <div class="awards-list">
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">Captain Thomas Farrell Greenhalgh Memorial Graduate Scholarship (2023 &amp; 2026)</div></div>
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">Alberta Graduate Excellence Scholarship (AGES), 2025</div></div>
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">Wiley Top Cited Article Award — CAAI Transactions on Intelligence Technology, 2025</div></div>
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">University of Alberta Doctoral Recruitment Scholarship, 2023</div></div>
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">Ranked 1st out of ~40 Students, M.Sc. Control Systems, KNTU, 2022</div></div>
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">Research Grant, Iran's National Elites Foundation, 2021 &amp; 2022</div></div>
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">First Place, Problem-based Competitions, Iran's National Elites Foundation–Rahneshan, 2021</div></div>
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">Best Presenter, Master Course Seminar, KNTU, 2021</div></div>
+      <div class="award-item"><div class="award-dot"></div><div class="award-text">Direct Admission to Master's Program, 2020</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label">Contact</div>
+    <h2>Get In Touch</h2>
+    <div class="divider"></div>
+    <div class="contact-grid">
+      <div class="contact-item">
+        <span class="c-label">Personal Email</span>
+        <a href="mailto:mohammadmodir2@gmail.com">mohammadmodir2@gmail.com</a>
+      </div>
+      <div class="contact-item">
+        <span class="c-label">University Email</span>
+        <a href="mailto:modirrou@ualberta.ca">modirrou@ualberta.ca</a>
+      </div>
+      <div class="contact-item">
+        <span class="c-label">Phone</span>
+        <span>+1 587 936 3705</span>
+      </div>
+      <div class="contact-item">
+        <span class="c-label">Location</span>
+        <span>10750 78 Ave, Edmonton, AB, Canada</span>
+      </div>
+      <div class="contact-item">
+        <span class="c-label">LinkedIn</span>
+        <a href="https://www.linkedin.com/in/mohammad-hossein-modirrousta/" target="_blank">linkedin.com/in/mohammad-hossein-modirrousta</a>
+      </div>
+      <div class="contact-item">
+        <span class="c-label">GitHub</span>
+        <a href="https://github.com/mo26-web" target="_blank">github.com/mo26-web</a>
+      </div>
+      <div class="contact-item">
+        <span class="c-label">Google Scholar</span>
+        <a href="https://scholar.google.com/citations?user=1ALTxekAAAAJ&hl=en" target="_blank">scholar.google.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2025 Mohammad Hossein Modirrousta · Built for GitHub Pages
+</footer>
 
 </body>
-
-</html>
-
-</body>
-
 </html>
