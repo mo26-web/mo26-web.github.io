@@ -287,13 +287,13 @@
     .t-logo {
       width: 100px;
       height: 60px;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 6px;
+      background: transparent;
+      border: none;
+      border-radius: 0;
+      padding: 0;
       object-fit: contain;
       display: block;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      box-shadow: none;
     }
     .t-role { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
     .t-place { font-size: 0.85rem; color: var(--accent); margin-bottom: 0.4rem; }
@@ -1030,10 +1030,8 @@
   // Academic sub-tabs
   document.querySelectorAll('[data-tab]').forEach(btn => {
     btn.addEventListener('click', () => {
-      // update buttons
       btn.closest('.papers-filter').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      // show correct panel
       const section = btn.closest('section');
       section.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
       section.querySelector('#tab-' + btn.dataset.tab).classList.remove('hidden');
@@ -1047,7 +1045,6 @@
     if (hidden.style.display === 'none') {
       hidden.style.display = 'block';
       btn.textContent = 'Show Less ↑';
-      // re-trigger reveal for newly visible items
       hidden.querySelectorAll('.reveal').forEach(el => {
         el.classList.add('visible');
       });
@@ -1070,18 +1067,15 @@
       btn.classList.add('active');
       const filter = btn.dataset.filter;
 
-      // Reset show more
       const papersHidden = document.getElementById('papers-hidden');
       const papersMoreBtn = document.getElementById('papers-more-btn');
       if (papersHidden) { papersHidden.style.display = 'none'; }
       if (papersMoreBtn) { papersMoreBtn.textContent = 'Show More ↓'; }
 
-      // Show/hide cards in both lists
       document.querySelectorAll('#papers-visible .paper-card, #papers-hidden .paper-card').forEach(card => {
         card.classList.toggle('hidden', filter !== 'all' && card.dataset.status !== filter);
       });
 
-      // Hide show more btn if nothing hidden remains
       if (papersMoreBtn) {
         const hiddenCards = document.querySelectorAll('#papers-hidden .paper-card:not(.hidden)');
         papersMoreBtn.style.display = hiddenCards.length > 0 ? 'inline-block' : 'none';
