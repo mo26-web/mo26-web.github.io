@@ -286,6 +286,12 @@
       background: transparent; border: none; border-radius: 0;
       padding: 0; object-fit: contain; display: block; box-shadow: none;
     }
+    .t-logo-blend {
+      mix-blend-mode: multiply;
+    }
+    .t-logo-large {
+      width: 130px; height: 75px;
+    }
     .t-role { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
     .t-place { font-size: 0.85rem; color: var(--accent); margin-bottom: 0.4rem; }
     .t-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
@@ -569,7 +575,7 @@
     <div class="tab-panel" id="tab-education">
       <div class="timeline">
         <div class="timeline-item reveal">
-          <div class="t-year">2023 – Present<img src="images/uofa.png" alt="University of Alberta" class="t-logo"/></div>
+          <div class="t-year">2023 – Present<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-large"/></div>
           <div>
             <div class="t-role">PhD in Chemical &amp; Materials Engineering</div>
             <div class="t-place">University of Alberta · Edmonton, Canada</div>
@@ -735,7 +741,7 @@
     <div class="divider reveal reveal-delay-2"></div>
     <div class="timeline">
       <div class="timeline-item reveal">
-        <div class="t-year">2025 – Present<img src="images/uofa.png" alt="University of Alberta" class="t-logo"/></div>
+        <div class="t-year">2025 – Present<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-large"/></div>
         <div>
           <div class="t-role">Assistant Manager, Process Control Lab</div>
           <div class="t-place">University of Alberta · Edmonton, Canada</div>
@@ -743,7 +749,7 @@
         </div>
       </div>
       <div class="timeline-item reveal reveal-delay-1">
-        <div class="t-year">2024 – 2025<img src="images/uofa.png" alt="University of Alberta" class="t-logo"/></div>
+        <div class="t-year">2024 – 2025<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-large"/></div>
         <div>
           <div class="t-role">Research Assistant &amp; Laboratory Safety Associate</div>
           <div class="t-place">University of Alberta · Process Control Lab</div>
@@ -751,7 +757,7 @@
         </div>
       </div>
       <div class="timeline-item reveal reveal-delay-2">
-        <div class="t-year">2022 – 2023<img src="images/apac.png" alt="APAC Research Group" style="background:var(--warm-white);border-radius:4px;padding:4px;" class="t-logo"/></div>
+        <div class="t-year">2022 – 2023<img src="images/apac.png" alt="APAC Research Group" class="t-logo t-logo-blend"/></div>
         <div>
           <div class="t-role">AI Research Engineer</div>
           <div class="t-place">APAC Research Group · Tehran, Iran</div>
@@ -759,7 +765,7 @@
         </div>
       </div>
       <div class="timeline-item reveal">
-        <div class="t-year">2021 – 2022<img src="images/aicell.png" alt="AICell Startup" style="background:var(--warm-white);border-radius:4px;padding:4px;" class="t-logo"/></div>
+        <div class="t-year">2021 – 2022<img src="images/aicell.png" alt="AICell Startup" class="t-logo t-logo-blend"/></div>
         <div>
           <div class="t-role">Computer Vision Engineer</div>
           <div class="t-place">AICell Startup · Tehran, Iran</div>
@@ -788,7 +794,7 @@
 
       <!-- 2026 — MPC Decision Support Web App (Supervisor) -->
       <div class="timeline-item reveal">
-        <div class="t-year">2026<img src="images/shell.png" alt="Shell Canada" class="t-logo" style="background:var(--warm-white);border-radius:4px;padding:4px;"/></div>
+        <div class="t-year">2026<img src="images/shell.gif" alt="Shell Canada" class="t-logo t-logo-blend"/></div>
         <div>
           <span class="t-badge t-badge-supervisor">Supervisor</span>
           <div class="t-role">MPC Decision Support Toolbox — Interactive Web Application &amp; AI Agent</div>
@@ -799,7 +805,7 @@
 
       <!-- 2025–2026 — Performance Monitoring MPC (Research) -->
       <div class="timeline-item reveal reveal-delay-1">
-        <div class="t-year">2025 – 2026<img src="images/shell.png" alt="Shell Canada" class="t-logo" style="background:var(--warm-white);border-radius:4px;padding:4px;"/></div>
+        <div class="t-year">2025 – 2026<img src="images/shell.gif" alt="Shell Canada" class="t-logo t-logo-blend"/></div>
         <div>
           <span class="t-badge t-badge-lead">Lead Researcher</span>
           <div class="t-role">Performance Monitoring and Decision Support for MPC Using KPIs in Distillation Unit</div>
@@ -810,7 +816,7 @@
 
       <!-- 2025–2026 — Oscillation Analysis Toolbox (Supervisor) -->
       <div class="timeline-item reveal reveal-delay-2">
-        <div class="t-year">2025 – 2026<img src="images/shell.png" alt="Shell Canada" class="t-logo" style="background:var(--warm-white);border-radius:4px;padding:4px;"/></div>
+        <div class="t-year">2025 – 2026<img src="images/shell.gif" alt="Shell Canada" class="t-logo t-logo-blend"/></div>
         <div>
           <span class="t-badge t-badge-supervisor">Supervisor</span>
           <div class="t-role">AI-Augmented Autonomous Oscillation Analysis Toolbox</div>
@@ -821,7 +827,7 @@
 
       <!-- 2025 — Plantwide Oscillation Web App (Supervisor) -->
       <div class="timeline-item reveal">
-        <div class="t-year">2025<img src="images/shell.png" alt="Shell Canada" class="t-logo" style="background:var(--warm-white);border-radius:4px;padding:4px;"/></div>
+        <div class="t-year">2025<img src="images/shell.gif" alt="Shell Canada" class="t-logo t-logo-blend"/></div>
         <div>
           <span class="t-badge t-badge-supervisor">Supervisor</span>
           <div class="t-role">Plantwide Oscillation Toolbox — Interactive Web Application</div>
@@ -832,7 +838,7 @@
 
       <!-- 2024 — Oscillation Detection Toolbox (Research) -->
       <div class="timeline-item reveal reveal-delay-1">
-        <div class="t-year">2024<img src="images/shell.png" alt="Shell Canada" class="t-logo" style="background:var(--warm-white);border-radius:4px;padding:4px;"/></div>
+        <div class="t-year">2024<img src="images/shell.gif" alt="Shell Canada" class="t-logo t-logo-blend"/></div>
         <div>
           <span class="t-badge t-badge-lead">Lead Researcher</span>
           <div class="t-role">Oscillation Detection, Stiction Detection and Causal Analysis Toolbox</div>
