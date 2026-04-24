@@ -88,7 +88,6 @@
         radial-gradient(ellipse 55% 65% at 85% 50%, rgba(184,92,56,0.09) 0%, transparent 70%),
         radial-gradient(ellipse 35% 45% at 10% 80%, rgba(184,92,56,0.05) 0%, transparent 60%);
     }
-    /* floating orbs */
     .orb {
       position: absolute; border-radius: 50%;
       background: radial-gradient(circle, rgba(184,92,56,0.12), transparent 70%);
@@ -138,7 +137,6 @@
       opacity: 0; animation: fadeUp 0.7s 0.5s ease forwards;
     }
 
-    /* profile photo */
     .hero-photo-wrap {
       opacity: 0; animation: fadeUp 0.7s 0.3s ease forwards;
     }
@@ -267,8 +265,7 @@
     .more-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
     .tab-panel.hidden { display: none; }
 
-    /* ── EXPERIENCE ── */
-    #experience { background: var(--cream); }
+    /* ── TIMELINE (shared) ── */
     .timeline { display: flex; flex-direction: column; }
     .timeline-item {
       display: grid; grid-template-columns: 140px 1fr;
@@ -285,19 +282,23 @@
       display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem;
     }
     .t-logo {
-      width: 100px;
-      height: 60px;
-      background: transparent;
-      border: none;
-      border-radius: 0;
-      padding: 0;
-      object-fit: contain;
-      display: block;
-      box-shadow: none;
+      width: 100px; height: 60px;
+      background: transparent; border: none; border-radius: 0;
+      padding: 0; object-fit: contain; display: block; box-shadow: none;
     }
     .t-role { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
     .t-place { font-size: 0.85rem; color: var(--accent); margin-bottom: 0.4rem; }
-    .t-desc { font-size: 0.88rem; color: var(--muted); }
+    .t-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── PROJECT BADGE ── */
+    .t-badge {
+      display: inline-block;
+      font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.18rem 0.6rem; border-radius: 2px; margin-bottom: 0.4rem;
+      font-family: 'DM Sans', sans-serif; font-weight: 500;
+    }
+    .t-badge-research { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+    .t-badge-supervisor { background: #e0f2fe; color: #075985; border: 1px solid #bae6fd; }
 
     /* ── SKILLS ── */
     #skills { background: var(--section-bg); }
@@ -441,10 +442,7 @@
 </head>
 <body>
 
-<!-- PROGRESS BAR -->
 <div id="progress-bar"></div>
-
-<!-- BACK TO TOP -->
 <button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <!-- NAV -->
@@ -454,6 +452,7 @@
     <li><a href="#about">About</a></li>
     <li><a href="#academic">Academic</a></li>
     <li><a href="#work">Work</a></li>
+    <li><a href="#projects">Projects</a></li>
     <li><a href="#papers">Papers</a></li>
     <li><a href="#skills">Skills</a></li>
     <li><a href="#awards">Awards</a></li>
@@ -506,7 +505,6 @@
     <h2 class="reveal reveal-delay-1">Who I Am</h2>
     <div class="divider reveal reveal-delay-2"></div>
 
-    <!-- STATS -->
     <div class="stats-row reveal reveal-delay-2">
       <div class="stat-card">
         <span class="stat-number" data-target="10">0</span>
@@ -561,7 +559,6 @@
     <h2 class="reveal reveal-delay-1">Academic Experience</h2>
     <div class="divider reveal reveal-delay-2"></div>
 
-    <!-- SUB-TABS -->
     <div class="papers-filter reveal" style="margin-bottom:2rem;">
       <button class="filter-btn active" data-tab="education">Education</button>
       <button class="filter-btn" data-tab="teaching">Teaching</button>
@@ -637,7 +634,6 @@
           </div>
         </div>
       </div>
-      <!-- Hidden TAs -->
       <div class="timeline" id="ta-hidden" style="display:none;">
         <div class="timeline-item reveal">
           <div class="t-year">2022–2023</div>
@@ -728,7 +724,6 @@
       </div>
       <button class="more-btn" id="rev-more-btn" onclick="toggleMore('rev')">Show More ↓</button>
     </div>
-
   </div>
 </section>
 
@@ -779,6 +774,73 @@
           <div class="t-desc">Developed AI solutions for fault detection and identification in industrial control systems.</div>
         </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background: var(--section-bg);">
+  <div class="section-inner">
+    <div class="section-label reveal">Projects</div>
+    <h2 class="reveal reveal-delay-1">Industrial Research Projects</h2>
+    <div class="divider reveal reveal-delay-2"></div>
+    <div class="timeline">
+
+      <!-- 2026 — MPC Decision Support Web App (Supervisor) -->
+      <div class="timeline-item reveal">
+        <div class="t-year">2026<img src="images/shell.gif" alt="Shell Canada" class="t-logo"/></div>
+        <div>
+          <span class="t-badge t-badge-supervisor">Supervisor</span>
+          <div class="t-role">MPC Decision Support Toolbox — Interactive Web Application &amp; AI Agent</div>
+          <div class="t-place">Shell Canada · NSERC Alliance Program</div>
+          <div class="t-desc">Supervised the development of a full-stack Model Predictive Control decision support toolbox for industrial process monitoring and fault diagnosis. The system features KPI computation, anomaly detection, LSTM-based KPI trend forecasting, and transfer entropy causal analysis, delivered through a Next.js + FastAPI web application with both manual and AI-guided modes. The autonomous Expert Guidance Agent combines an LLM with local RAG over plant documents and a structured tool suite to conduct end-to-end fault investigations from a single natural language prompt. Guided the research direction, system architecture, and AI agent design throughout the project.</div>
+        </div>
+      </div>
+
+      <!-- 2025–2026 — Performance Monitoring MPC (Research) -->
+      <div class="timeline-item reveal reveal-delay-1">
+        <div class="t-year">2025 – 2026<img src="images/shell.gif" alt="Shell Canada" class="t-logo"/></div>
+        <div>
+          <span class="t-badge t-badge-research">Research</span>
+          <div class="t-role">Performance Monitoring and Decision Support for MPC Using KPIs in Distillation Unit</div>
+          <div class="t-place">Shell Canada · NSERC Alliance Program</div>
+          <div class="t-desc">Designed and implemented a data-driven MPC decision support system for control loop performance monitoring in an atmospheric and vacuum distillation unit. Developed a multi-category KPI evaluation framework — covering capacity, safety, control, and economic indicators — computed over sliding windows from process data. Applied LSTM-based multi-output forecasting for predictive KPI trend estimation and transfer entropy causal analysis for anomaly source identification. Validated against diverse anomaly scenarios including poor PID tuning, stealthy cyberattack (ramp attack), and human-induced tight constraints, with causality matrices confirming source detection alignment with simulation ground truth.</div>
+        </div>
+      </div>
+
+      <!-- 2025–2026 — Oscillation Analysis Toolbox (Supervisor) -->
+      <div class="timeline-item reveal reveal-delay-2">
+        <div class="t-year">2025 – 2026<img src="images/shell.gif" alt="Shell Canada" class="t-logo"/></div>
+        <div>
+          <span class="t-badge t-badge-supervisor">Supervisor</span>
+          <div class="t-role">AI-Augmented Autonomous Oscillation Analysis Toolbox</div>
+          <div class="t-place">Shell Canada · NSERC Alliance Program</div>
+          <div class="t-desc">Supervised the development of an LLM-integrated oscillation analysis system for industrial process control. The system evolved from an AI-assisted toolbox interface into a fully autonomous pipeline featuring Model Context Protocol (MCP) tool integration, plant-wide spectral envelope analysis with Oscillation Contribution Index ranking, live OPC UA server connectivity with scheduled streaming analysis, and a Retrieval-Augmented Generation (RAG) module with adaptive relevance filtering. Guided the research direction, technical architecture, and milestone delivery across two annual presentation cycles.</div>
+        </div>
+      </div>
+
+      <!-- 2025 — Plantwide Oscillation Web App (Supervisor) -->
+      <div class="timeline-item reveal">
+        <div class="t-year">2025<img src="images/shell.gif" alt="Shell Canada" class="t-logo"/></div>
+        <div>
+          <span class="t-badge t-badge-supervisor">Supervisor</span>
+          <div class="t-role">Plantwide Oscillation Toolbox — Interactive Web Application</div>
+          <div class="t-place">Shell Canada · NSERC Alliance Program</div>
+          <div class="t-desc">Supervised the development of an interactive web-based oscillation analysis toolbox built using Plotly Dash, providing a unified interface for single-loop and plant-wide oscillation detection, root cause analysis via stiction and poor tuning identification, and deep learning-based diagnostics including CNN with Markov Transition Field and GAF-SAE (Gramian Angular Field + Stacked Autoencoder) methods. Guided the research direction, algorithm selection, and UI/UX design decisions throughout the project.</div>
+        </div>
+      </div>
+
+      <!-- 2024 — Oscillation Detection Toolbox (Research) -->
+      <div class="timeline-item reveal reveal-delay-1">
+        <div class="t-year">2024<img src="images/shell.gif" alt="Shell Canada" class="t-logo"/></div>
+        <div>
+          <span class="t-badge t-badge-research">Research</span>
+          <div class="t-role">Oscillation Detection, Stiction Detection and Causal Analysis Toolbox</div>
+          <div class="t-place">Shell Canada · NSERC Alliance Program</div>
+          <div class="t-desc">Designed and implemented an integrated GUI-based toolbox for automatic oscillation detection and root cause analysis in industrial control loops. Developed deep learning-based methods for oscillation detection (CNN with shape-based pattern recognition), stiction detection (Markov Transition Field + CNN), and poor controller tuning identification (Gramian Angular Field + Stacked Autoencoder). Introduced a physics-informed sparse Granger causality framework incorporating domain knowledge as optimization constraints with L1 regularization to eliminate spurious causations, producing interpretable causal maps for fault propagation analysis. Validated on a distillation column case study with 17 process variables.</div>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -904,7 +966,7 @@
       <div class="paper-card reveal reveal-delay-2" data-status="published">
         <div class="paper-venue">IET Collaborative Intelligent Manufacturing · 2023</div>
         <div class="paper-title">Deep Q-Learning Recommender Algorithm with Update Policy for a Real Steam Turbine System</div>
-        <div class="paper-authors">Modirrousta, M. H., Aliyari Shoorehdeli, M., Yari, M., & Ghahremani, A.</div>
+        <div class="paper-authors">Modirrousta, M. H., Aliyari Shoorehdeli, M., Yari, M., &amp; Ghahremani, A.</div>
         <a href="https://doi.org/10.1049/cim2.12081" target="_blank" class="paper-link">→ doi.org/10.1049/cim2.12081</a>
       </div>
       <div class="paper-card reveal" data-status="review">
@@ -922,7 +984,7 @@
 <section id="awards">
   <div class="section-inner">
     <div class="section-label reveal">Recognition</div>
-    <h2 class="reveal reveal-delay-1">Honors & Awards</h2>
+    <h2 class="reveal reveal-delay-1">Honors &amp; Awards</h2>
     <div class="divider reveal reveal-delay-2"></div>
     <div class="awards-list" id="awards-visible">
       <div class="award-item reveal"><div class="award-dot"></div><div class="award-text">Captain Thomas Farrell Greenhalgh Memorial Graduate Scholarship (2023 &amp; 2026)</div></div>
@@ -1045,9 +1107,7 @@
     if (hidden.style.display === 'none') {
       hidden.style.display = 'block';
       btn.textContent = 'Show Less ↑';
-      hidden.querySelectorAll('.reveal').forEach(el => {
-        el.classList.add('visible');
-      });
+      hidden.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
     } else {
       hidden.style.display = 'none';
       btn.textContent = 'Show More ↓';
