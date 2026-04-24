@@ -282,16 +282,14 @@
       display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem;
     }
     .t-logo {
-      width: 100px; height: 60px;
+      width: 130px; height: 80px;
       background: transparent; border: none; border-radius: 0;
       padding: 0; object-fit: contain; display: block; box-shadow: none;
     }
-    .t-logo-blend {
-      mix-blend-mode: multiply;
-    }
-    .t-logo-large {
-      width: 130px; height: 75px;
-    }
+    /* For logos with baked-in white backgrounds (shell/apac/aicell),
+       multiply blends the white into the section background */
+    .t-logo-blend { mix-blend-mode: multiply; }
+    .t-logo-uofa { width: 150px; height: 95px; }
     .t-role { font-family: 'Lora', serif; font-size: 1rem; font-weight: 600; margin-bottom: 0.2rem; }
     .t-place { font-size: 0.85rem; color: var(--accent); margin-bottom: 0.4rem; }
     .t-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
@@ -575,7 +573,7 @@
     <div class="tab-panel" id="tab-education">
       <div class="timeline">
         <div class="timeline-item reveal">
-          <div class="t-year">2023 – Present<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-large"/></div>
+          <div class="t-year">2023 – Present<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-uofa"/></div>
           <div>
             <div class="t-role">PhD in Chemical &amp; Materials Engineering</div>
             <div class="t-place">University of Alberta · Edmonton, Canada</div>
@@ -741,7 +739,7 @@
     <div class="divider reveal reveal-delay-2"></div>
     <div class="timeline">
       <div class="timeline-item reveal">
-        <div class="t-year">2025 – Present<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-large"/></div>
+        <div class="t-year">2025 – Present<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-uofa"/></div>
         <div>
           <div class="t-role">Assistant Manager, Process Control Lab</div>
           <div class="t-place">University of Alberta · Edmonton, Canada</div>
@@ -749,7 +747,7 @@
         </div>
       </div>
       <div class="timeline-item reveal reveal-delay-1">
-        <div class="t-year">2024 – 2025<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-large"/></div>
+        <div class="t-year">2024 – 2025<img src="images/uofa.png" alt="University of Alberta" class="t-logo t-logo-uofa"/></div>
         <div>
           <div class="t-role">Research Assistant &amp; Laboratory Safety Associate</div>
           <div class="t-place">University of Alberta · Process Control Lab</div>
