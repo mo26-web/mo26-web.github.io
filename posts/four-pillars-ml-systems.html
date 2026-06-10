@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Four Pillars of a Strong Machine Learning System · M. H. Modirrousta</title>
+  <meta name="description" content="Beyond accuracy: the four characteristics — reliability, scalability, maintainability, and adaptability — that make a machine learning system survive in the real world."/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fff9f3;
+      --ink: #1c1a17;
+      --muted: #6b6560;
+      --accent: #b85c38;
+      --accent-light: #f0e0d6;
+      --border: #e8e0d5;
+      --section-bg: #f5f0e8;
+      --code-bg: #2b2622;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(250,247,242,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 62px;
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .nav-name {
+      font-family: 'Lora', serif; font-size: 1rem;
+      letter-spacing: 0.02em; color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; align-items: center; }
+    .nav-links a {
+      text-decoration: none; font-size: 0.8rem;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1.5px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* ── READING PROGRESS ── */
+    #progress-bar {
+      position: fixed; top: 62px; left: 0; height: 2px;
+      background: var(--accent); z-index: 101; width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── ARTICLE ── */
+    .article { max-width: 680px; margin: 0 auto; padding: 130px 1.5rem 40px; }
+
+    .back-link {
+      display: inline-block; font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; margin-bottom: 2rem; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .article-meta {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.78rem; color: var(--muted);
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .article-meta .a-date { text-transform: uppercase; letter-spacing: 0.1em; }
+    .article-meta .a-tag {
+      background: var(--accent-light); color: var(--accent);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.15rem 0.6rem; border-radius: 2px; border: 1px solid rgba(184,92,56,0.15);
+    }
+
+    .article h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      font-weight: 600; line-height: 1.2; color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+    .article-divider { width: 40px; height: 2px; background: var(--accent); margin-bottom: 2.5rem; }
+
+    /* ── PROSE ── */
+    .prose { font-size: 1.05rem; color: #33302c; }
+    .prose p { margin-bottom: 1.4rem; }
+    .prose h2 {
+      font-family: 'Lora', serif; font-size: 1.5rem; font-weight: 600;
+      color: var(--ink); margin: 2.6rem 0 1rem;
+    }
+    .prose h3 {
+      font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 600;
+      color: var(--ink); margin: 2rem 0 0.8rem;
+    }
+    .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .prose a:hover { text-decoration: none; }
+    .prose strong { font-weight: 500; color: var(--ink); }
+    .prose ul, .prose ol { margin: 0 0 1.4rem 1.4rem; }
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose blockquote {
+      border-left: 3px solid var(--accent);
+      background: var(--warm-white);
+      padding: 1rem 1.4rem; margin: 1.8rem 0;
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: 1.1rem; color: var(--ink);
+      border-radius: 0 4px 4px 0;
+    }
+    .prose blockquote p { margin: 0; }
+
+    .prose img {
+      max-width: 100%; height: auto;
+      border-radius: 4px; border: 1px solid var(--border);
+      margin: 1.8rem 0; display: block;
+    }
+    .prose figcaption {
+      font-size: 0.82rem; color: var(--muted);
+      text-align: center; margin-top: -1.2rem; margin-bottom: 1.8rem;
+    }
+
+    .prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.86em;
+      background: var(--accent-light);
+      color: #8a3f22;
+      padding: 0.12em 0.4em; border-radius: 3px;
+    }
+    .prose pre {
+      background: var(--code-bg); color: #f0e8df;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; line-height: 1.6;
+      padding: 1.2rem 1.4rem; border-radius: 6px;
+      overflow-x: auto; margin: 1.8rem 0;
+    }
+    .prose pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+    .prose hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+    /* ── PILLAR CARD (signature element for this post) ── */
+    .pillar {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1.4rem 1.6rem;
+      margin: 1.8rem 0;
+    }
+    .pillar .pillar-head {
+      display: flex; align-items: baseline; gap: 0.6rem;
+      margin-bottom: 0.6rem;
+    }
+    .pillar .pillar-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem; color: var(--accent); font-weight: 500;
+    }
+    .pillar h3 {
+      font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 600;
+      color: var(--ink); margin: 0;
+    }
+    .pillar p { margin-bottom: 0.8rem; }
+    .pillar p:last-child { margin-bottom: 0; }
+    .pillar .example {
+      font-size: 0.95rem; color: var(--muted);
+    }
+    .pillar .example strong { color: var(--accent); font-weight: 500; }
+
+    /* ── ARTICLE FOOTER ── */
+    .article-end { max-width: 680px; margin: 0 auto; padding: 0 1.5rem 80px; }
+    .article-end-inner {
+      border-top: 1px solid var(--border); padding-top: 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .author-chip { display: flex; align-items: center; gap: 0.8rem; }
+    .author-chip .a-name { font-family: 'Lora', serif; font-weight: 600; font-size: 0.95rem; }
+    .author-chip .a-sub { font-size: 0.8rem; color: var(--muted); }
+    .share-links { display: flex; gap: 0.6rem; }
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1rem; border: 1px solid var(--border);
+      border-radius: 3px; font-size: 0.78rem; color: var(--ink);
+      text-decoration: none; transition: all 0.2s; cursor: pointer;
+      background: transparent; font-family: 'DM Sans', sans-serif;
+    }
+    .share-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    footer {
+      background: var(--ink);
+      padding: 1.5rem 2rem; text-align: center;
+      font-size: 0.78rem; color: rgba(255,255,255,0.3);
+    }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    @media (max-width: 720px) {
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; font-size: 0.72rem; }
+      .article { padding: 110px 1.3rem 30px; }
+      .prose { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="../index.html" class="nav-name">M. H. Modirrousta</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#papers">Papers</a></li>
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article class="article">
+  <a href="../blog.html" class="back-link">← All posts</a>
+
+  <div class="article-meta">
+    <span class="a-date">June 10, 2026</span>
+    <span class="a-tag">ML Systems</span>
+    <span>4 min read</span>
+  </div>
+
+  <h1>🏛️ The Four Pillars of a Strong Machine Learning System</h1>
+  <div class="article-divider"></div>
+
+  <div class="prose">
+    <p>When we build a machine learning system, success isn't just about a high-accuracy model. A professional, trustworthy system needs four key characteristics to survive in the real world. Let's walk through these four foundational pillars.</p>
+
+    <figure style="margin: 2rem 0;">
+      <svg width="100%" viewBox="0 0 680 400" role="img" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <title>The four pillars of a strong machine learning system</title>
+        <desc>A structure resting on four labelled columns — reliability, scalability, maintainability, and adaptability — supporting a roof labelled Trustworthy ML system.</desc>
+        <style>
+          .d-roof { fill: #b85c38; }
+          .d-beam { fill: #d8997c; }
+          .d-col  { fill: #fff9f3; stroke: #b85c38; stroke-width: 1; }
+          .d-title { font-family: 'Lora', serif; font-weight: 600; fill: #1c1a17; }
+          .d-roof-text { font-family: 'Lora', serif; font-weight: 600; fill: #faf7f2; font-size: 17px; }
+          .d-sub  { font-family: 'DM Sans', sans-serif; font-weight: 300; fill: #6b6560; font-size: 13px; }
+        </style>
+
+        <rect x="90" y="44" width="500" height="42" rx="6" class="d-roof"/>
+        <text x="340" y="65" text-anchor="middle" dominant-baseline="central" class="d-roof-text">Trustworthy ML system</text>
+
+        <rect x="78" y="94" width="524" height="12" rx="3" class="d-beam"/>
+
+        <rect x="96"  y="122" width="112" height="208" rx="6" class="d-col"/>
+        <text x="152" y="152" text-anchor="middle" dominant-baseline="central" class="d-title" font-size="15">Reliability</text>
+        <text x="152" y="180" text-anchor="middle" dominant-baseline="central" class="d-sub">Works under</text>
+        <text x="152" y="196" text-anchor="middle" dominant-baseline="central" class="d-sub">adversity</text>
+        <text x="152" y="220" text-anchor="middle" dominant-baseline="central" class="d-sub">Can fail</text>
+        <text x="152" y="236" text-anchor="middle" dominant-baseline="central" class="d-sub">silently</text>
+
+        <rect x="232" y="122" width="112" height="208" rx="6" class="d-col"/>
+        <text x="288" y="152" text-anchor="middle" dominant-baseline="central" class="d-title" font-size="15">Scalability</text>
+        <text x="288" y="180" text-anchor="middle" dominant-baseline="central" class="d-sub">Grows with</text>
+        <text x="288" y="196" text-anchor="middle" dominant-baseline="central" class="d-sub">load</text>
+        <text x="288" y="220" text-anchor="middle" dominant-baseline="central" class="d-sub">Scales down</text>
+        <text x="288" y="236" text-anchor="middle" dominant-baseline="central" class="d-sub">to save cost</text>
+
+        <rect x="368" y="122" width="112" height="208" rx="6" class="d-col"/>
+        <text x="424" y="148" text-anchor="middle" dominant-baseline="central" class="d-title" font-size="15">Maintain-</text>
+        <text x="424" y="166" text-anchor="middle" dominant-baseline="central" class="d-title" font-size="15">ability</text>
+        <text x="424" y="194" text-anchor="middle" dominant-baseline="central" class="d-sub">Documented,</text>
+        <text x="424" y="210" text-anchor="middle" dominant-baseline="central" class="d-sub">versioned</text>
+        <text x="424" y="234" text-anchor="middle" dominant-baseline="central" class="d-sub">Reproducible</text>
+
+        <rect x="504" y="122" width="112" height="208" rx="6" class="d-col"/>
+        <text x="560" y="148" text-anchor="middle" dominant-baseline="central" class="d-title" font-size="15">Adapt-</text>
+        <text x="560" y="166" text-anchor="middle" dominant-baseline="central" class="d-title" font-size="15">ability</text>
+        <text x="560" y="194" text-anchor="middle" dominant-baseline="central" class="d-sub">Updates with</text>
+        <text x="560" y="210" text-anchor="middle" dominant-baseline="central" class="d-sub">new data</text>
+        <text x="560" y="234" text-anchor="middle" dominant-baseline="central" class="d-sub">No downtime</text>
+
+        <rect x="70" y="338" width="540" height="14" rx="3" class="d-beam"/>
+        <rect x="58" y="356" width="564" height="10" rx="3" class="d-roof"/>
+      </svg>
+      <figcaption style="font-size:0.82rem;color:var(--muted);text-align:center;margin-top:0.6rem;">The four pillars holding up a trustworthy ML system.</figcaption>
+    </figure>
+
+    <div class="pillar">
+      <div class="pillar-head">
+        <span class="pillar-num">01</span>
+        <h3>💎 Reliability</h3>
+      </div>
+      <p>The system has to keep working correctly even under adverse conditions — hardware faults, human error, and the like. More importantly, ML systems can fail <em>silently</em>: they produce a wrong output with no error and no crash to warn you.</p>
+      <p class="example"><strong>Example:</strong> Imagine using a translation service for a language you don't speak. The translation could be completely wrong, but you'd never know. Technically the system is working — in practice it has failed.</p>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-head">
+        <span class="pillar-num">02</span>
+        <h3>📈 Scalability</h3>
+      </div>
+      <p>The system has to cope with growth — more traffic (users), more complexity (heavier models), or more models — and scale its resources up and down efficiently.</p>
+      <p class="example"><strong>Example:</strong> A system that needs 100 servers at peak hours should be able to drop to 10 during quiet periods to keep costs under control, rather than always running at expensive maximum capacity.</p>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-head">
+        <span class="pillar-num">03</span>
+        <h3>🛠️ Maintainability</h3>
+      </div>
+      <p>Different teams — ML engineers, DevOps engineers, and others — need to be able to work on the system easily. That means code, data, and models should be well documented, versioned, and reproducible.</p>
+      <p class="example"><strong>Example:</strong> If the lead engineer leaves the company, the next person should be able to pick up the work easily thanks to complete documentation and versioning — not have to rebuild everything from scratch.</p>
+    </div>
+
+    <div class="pillar">
+      <div class="pillar-head">
+        <span class="pillar-num">04</span>
+        <h3>🔄 Adaptability</h3>
+      </div>
+      <p>The world and its data are constantly changing. The system has to adapt quickly to those changes — shifting user behavior, evolving business needs — and update without interrupting service.</p>
+      <p class="example"><strong>Example:</strong> A fraud-detection model trained before an economic crisis may stumble on users' new spending patterns afterward. An adaptable system continuously updates on fresh data to hold onto its accuracy.</p>
+    </div>
+
+    <hr/>
+
+    <p>Adapted from Chapter 2 of Chip Huyen's excellent book <em>Designing Machine Learning Systems</em>.</p>
+  </div>
+</article>
+
+<div class="article-end">
+  <div class="article-end-inner">
+    <div class="author-chip">
+      <div>
+        <div class="a-name">Mohammad Hossein Modirrousta</div>
+        <div class="a-sub">PhD Researcher · University of Alberta</div>
+      </div>
+    </div>
+    <div class="share-links">
+      <button class="share-btn" onclick="copyLink()" id="copy-btn">Copy link</button>
+      <a class="share-btn" id="li-share" href="#" target="_blank" rel="noopener">Share on LinkedIn</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2026 Mohammad Hossein Modirrousta · <a href="../blog.html">More posts</a>
+</footer>
+
+<script>
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = pct + '%';
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  const pageUrl = window.location.href;
+  document.getElementById('li-share').href =
+    'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(pageUrl);
+
+  function copyLink() {
+    navigator.clipboard.writeText(pageUrl).then(() => {
+      const b = document.getElementById('copy-btn');
+      const original = b.textContent;
+      b.textContent = 'Copied ✓';
+      setTimeout(() => { b.textContent = original; }, 1800);
+    });
+  }
+</script>
+</body>
+</html>
