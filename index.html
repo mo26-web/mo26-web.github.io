@@ -69,7 +69,22 @@
     }
     .nav-links a:hover { color: var(--accent); }
     .nav-links a:hover::after { transform: scaleX(1); }
-
+    /* Blog — styled as a distinct pill button */
+    .nav-links a.nav-cta {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.4rem 1rem;
+      border-radius: 4px;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-links a.nav-cta:hover {
+      background: #9e4b2c;
+      color: #fff;
+      transform: translateY(-1px);
+    }
+    .nav-links a.nav-cta::after { display: none; }
+    
     /* ── PROGRESS BAR ── */
     #progress-bar {
       position: fixed; top: 62px; left: 0; height: 2px;
