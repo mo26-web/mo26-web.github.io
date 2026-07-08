@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FDI Analytics: An Open Toolbox for Unsupervised Fault Detection · M. H. Modirrousta</title>
+  <meta name="description" content="FDI Analytics is a point-and-click toolbox for unsupervised fault detection and identification on industrial sensor data — built in Python and Dash, deployed on Azure, with a built-in AI assistant."/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fff9f3;
+      --ink: #1c1a17;
+      --muted: #6b6560;
+      --accent: #b85c38;
+      --accent-light: #f0e0d6;
+      --border: #e8e0d5;
+      --section-bg: #f5f0e8;
+      --code-bg: #2b2622;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(250,247,242,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 62px;
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .nav-name {
+      font-family: 'Lora', serif; font-size: 1rem;
+      letter-spacing: 0.02em; color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; align-items: center; }
+    .nav-links a {
+      text-decoration: none; font-size: 0.8rem;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1.5px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* ── READING PROGRESS ── */
+    #progress-bar {
+      position: fixed; top: 62px; left: 0; height: 2px;
+      background: var(--accent); z-index: 101; width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── ARTICLE ── */
+    .article { max-width: 680px; margin: 0 auto; padding: 130px 1.5rem 40px; }
+
+    .back-link {
+      display: inline-block; font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; margin-bottom: 2rem; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .article-meta {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.78rem; color: var(--muted);
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .article-meta .a-date { text-transform: uppercase; letter-spacing: 0.1em; }
+    .article-meta .a-tag {
+      background: var(--accent-light); color: var(--accent);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.15rem 0.6rem; border-radius: 2px; border: 1px solid rgba(184,92,56,0.15);
+    }
+
+    .article h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      font-weight: 600; line-height: 1.2; color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+    .article-divider { width: 40px; height: 2px; background: var(--accent); margin-bottom: 2rem; }
+
+    /* ── ACTION BUTTONS (demo / repo) ── */
+    .article-actions {
+      display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 2.5rem;
+    }
+    .action-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.6rem 1.2rem; border-radius: 4px;
+      font-size: 0.85rem; letter-spacing: 0.02em; text-decoration: none;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .action-btn.primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+    .action-btn.primary:hover { background: #9e4b2c; transform: translateY(-1px); }
+    .action-btn.outline { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+    .action-btn.outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+    /* ── PROSE ── */
+    .prose { font-size: 1.05rem; color: #33302c; }
+    .prose p { margin-bottom: 1.4rem; }
+    .prose h2 {
+      font-family: 'Lora', serif; font-size: 1.5rem; font-weight: 600;
+      color: var(--ink); margin: 2.6rem 0 1rem;
+    }
+    .prose h3 {
+      font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 600;
+      color: var(--ink); margin: 2rem 0 0.8rem;
+    }
+    .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .prose a:hover { text-decoration: none; }
+    .prose strong { font-weight: 500; color: var(--ink); }
+    .prose ul, .prose ol { margin: 0 0 1.4rem 1.4rem; }
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose blockquote {
+      border-left: 3px solid var(--accent);
+      background: var(--warm-white);
+      padding: 1rem 1.4rem; margin: 1.8rem 0;
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: 1.1rem; color: var(--ink);
+      border-radius: 0 4px 4px 0;
+    }
+    .prose blockquote p { margin: 0; }
+
+    .prose img {
+      max-width: 100%; height: auto;
+      border-radius: 4px; border: 1px solid var(--border);
+      margin: 1.8rem 0; display: block;
+    }
+    .prose figcaption {
+      font-size: 0.82rem; color: var(--muted);
+      text-align: center; margin-top: 0.6rem;
+    }
+
+    .prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.86em;
+      background: var(--accent-light);
+      color: #8a3f22;
+      padding: 0.12em 0.4em; border-radius: 3px;
+    }
+    .prose pre {
+      background: var(--code-bg); color: #f0e8df;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; line-height: 1.6;
+      padding: 1.2rem 1.4rem; border-radius: 6px;
+      overflow-x: auto; margin: 1.8rem 0;
+    }
+    .prose pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+    .prose hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+    /* ── FEATURE CARDS (stage list) ── */
+    .stage {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+    }
+    .stage-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; }
+    .stage-num { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); font-weight: 500; }
+    .stage h3 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 600; color: var(--ink); margin: 0; }
+    .stage p { margin-bottom: 0.6rem; font-size: 0.98rem; }
+    .stage p:last-child { margin-bottom: 0; }
+    .stage .methods { font-size: 0.9rem; color: var(--muted); }
+    .stage .methods strong { color: var(--accent); font-weight: 500; }
+
+    /* ── HIGHLIGHT CALLOUT (AI assistant) ── */
+    .callout {
+      background: linear-gradient(0deg, var(--accent-light), var(--warm-white));
+      border: 1px solid rgba(184,92,56,0.25);
+      border-radius: 8px; padding: 1.5rem 1.6rem; margin: 2rem 0;
+    }
+    .callout .c-eyebrow {
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem; font-weight: 500;
+    }
+    .callout h3 { font-family: 'Lora', serif; font-size: 1.3rem; font-weight: 600; color: var(--ink); margin: 0 0 0.6rem; }
+    .callout p { margin-bottom: 0.8rem; }
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ── AUDIENCE CARDS ── */
+    .audience-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .audience-card {
+      background: var(--warm-white); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.3rem 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .audience-card:hover { border-color: var(--accent); transform: translateX(3px); }
+    .audience-card .au-tag {
+      display: inline-block; font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent); font-weight: 500;
+      background: var(--accent-light); border: 1px solid rgba(184,92,56,0.15);
+      padding: 0.15rem 0.6rem; border-radius: 2px; margin-bottom: 0.7rem;
+    }
+    .audience-card h3 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 600; color: var(--ink); margin: 0 0 0.5rem; }
+    .audience-card p { font-size: 0.96rem; margin-bottom: 0; color: #33302c; }
+
+    /* ── VIDEO EMBED (responsive 16:9) ── */
+    .video-wrap {
+      position: relative; width: 100%; padding-bottom: 56.25%;
+      height: 0; overflow: hidden; border-radius: 6px;
+      border: 1px solid var(--border); margin: 1.8rem 0;
+      background: var(--section-bg);
+    }
+    .video-wrap iframe {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
+    }
+
+    /* ── DOC LINKS ── */
+    .doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1.5rem 0; }
+    .doc-card {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--warm-white); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1rem 1.2rem; transition: all 0.2s;
+    }
+    .doc-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .doc-card .d-title { font-family: 'Lora', serif; font-weight: 600; font-size: 0.98rem; color: var(--ink); margin-bottom: 0.2rem; }
+    .doc-card .d-sub { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── ARTICLE FOOTER ── */
+    .article-end { max-width: 680px; margin: 0 auto; padding: 0 1.5rem 80px; }
+    .article-end-inner {
+      border-top: 1px solid var(--border); padding-top: 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .author-chip { display: flex; align-items: center; gap: 0.8rem; }
+    .author-chip .a-name { font-family: 'Lora', serif; font-weight: 600; font-size: 0.95rem; }
+    .author-chip .a-sub { font-size: 0.8rem; color: var(--muted); }
+    .share-links { display: flex; gap: 0.6rem; }
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1rem; border: 1px solid var(--border);
+      border-radius: 3px; font-size: 0.78rem; color: var(--ink);
+      text-decoration: none; transition: all 0.2s; cursor: pointer;
+      background: transparent; font-family: 'DM Sans', sans-serif;
+    }
+    .share-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    footer {
+      background: var(--ink);
+      padding: 1.5rem 2rem; text-align: center;
+      font-size: 0.78rem; color: rgba(255,255,255,0.3);
+    }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    @media (max-width: 720px) {
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; font-size: 0.72rem; }
+      .article { padding: 110px 1.3rem 30px; }
+      .prose { font-size: 1rem; }
+      .doc-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="../index.html" class="nav-name">M. H. Modirrousta</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#papers">Papers</a></li>
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article class="article">
+  <a href="../blog.html" class="back-link">← All posts</a>
+
+  <div class="article-meta">
+    <span class="a-date">June 11, 2026</span>
+    <span class="a-tag">Project</span>
+    <span>8 min read</span>
+  </div>
+
+  <h1>FDI Analytics: An Open Toolbox for Unsupervised Fault Detection</h1>
+  <div class="article-divider"></div>
+
+  <div class="article-actions">
+    <a href="https://fdi-analytics-app.azurewebsites.net/" target="_blank" rel="noopener" class="action-btn primary">
+      Try the live demo →
+    </a>
+    <a href="https://github.com/mhmodir/FDI-Analytics-Toolbox" target="_blank" rel="noopener" class="action-btn outline">
+      View on GitHub
+    </a>
+  </div>
+
+  <div class="prose">
+    <p>Industrial equipment generates enormous amounts of sensor data — vibration, temperature, pressure, current — logged continuously over time. Buried in that data are the early signs of faults. The hard part is that you usually don't have labeled examples of past failures to learn from: real breakdowns are rare, which is exactly why they're so costly and so difficult to collect data on.</p>
+
+    <p><strong>FDI Analytics</strong> is a point-and-click toolbox I've been building to tackle exactly this problem. It performs <strong>unsupervised</strong> fault detection and identification on industrial sensor data — meaning it learns what "normal" looks like directly from your data, then flags whatever no longer fits, without ever needing a labeled fault to train on. It answers two practical questions for a piece of equipment:</p>
+
+    <ul>
+      <li><strong>Is something unusual happening?</strong> — fault <em>detection</em>.</li>
+      <li><strong>Which variable looks most responsible?</strong> — fault <em>identification</em>.</li>
+    </ul>
+
+    <p>The whole thing runs in a web browser with no coding required — which means it's equally at home with a maintenance engineer on a plant floor, a curious first-time user, or a researcher benchmarking methods. It's live now on Azure, and the full source, documentation, and video walkthrough are on GitHub.</p>
+
+    <h2>The six-stage workflow</h2>
+    <p>You work top-to-bottom through six stages, and each stage's output feeds automatically into the next.</p>
+
+    <figure>
+      <svg width="100%" viewBox="0 0 680 120" role="img" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <title>The six-stage FDI Analytics workflow: upload, pre-process, features, detect, identify, report</title>
+        <desc>A left-to-right pipeline of six connected stages, each feeding the next.</desc>
+        <style>
+          .w-box { fill: #fff9f3; stroke: #b85c38; stroke-width: 1; }
+          .w-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; fill: #b85c38; }
+          .w-label { font-family: 'DM Sans', sans-serif; font-size: 12px; fill: #1c1a17; font-weight: 500; }
+          .w-arrow { stroke: #d8997c; stroke-width: 1.5; fill: none; }
+        </style>
+        <g>
+          <rect x="6"   y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="55" y="58" text-anchor="middle" class="w-num">01</text>
+          <text x="55" y="74" text-anchor="middle" class="w-label">Upload</text>
+        </g>
+        <path class="w-arrow" d="M108 62 L118 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="120" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="169" y="58" text-anchor="middle" class="w-num">02</text>
+          <text x="169" y="74" text-anchor="middle" class="w-label">Pre-process</text>
+        </g>
+        <path class="w-arrow" d="M222 62 L232 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="234" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="283" y="58" text-anchor="middle" class="w-num">03</text>
+          <text x="283" y="74" text-anchor="middle" class="w-label">Features</text>
+        </g>
+        <path class="w-arrow" d="M336 62 L346 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="348" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="397" y="58" text-anchor="middle" class="w-num">04</text>
+          <text x="397" y="74" text-anchor="middle" class="w-label">Detect</text>
+        </g>
+        <path class="w-arrow" d="M450 62 L460 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="462" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="511" y="58" text-anchor="middle" class="w-num">05</text>
+          <text x="511" y="74" text-anchor="middle" class="w-label">Identify</text>
+        </g>
+        <path class="w-arrow" d="M564 62 L574 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="576" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="625" y="58" text-anchor="middle" class="w-num">06</text>
+          <text x="625" y="74" text-anchor="middle" class="w-label">Report</text>
+        </g>
+        <defs>
+          <marker id="wa" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <path d="M0 0 L6 3.5 L0 7 z" fill="#d8997c"/>
+          </marker>
+        </defs>
+      </svg>
+      <figcaption>Upload → Pre-process → Extract Features → Detect → Identify → Report.</figcaption>
+    </figure>
+
+    <p>A defining design choice runs through every stage: each one offers both a <strong>traditional</strong> method (classical statistics and machine learning) and a <strong>deep-learning</strong> method (a small neural network that learns its own patterns), switchable with a single toggle. You start traditional for a fast read, and escalate to deep learning when you want a closer look.</p>
+
+    <h2>Features, stage by stage</h2>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">01</span><h3>Load your data</h3></div>
+      <p>Drag in a CSV or Excel file. A preview table and an interactive Variable Explorer let you eyeball each signal and catch an obviously broken sensor before going further.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">02</span><h3>Pre-processing</h3></div>
+      <p>Five optional, independently toggled clean-up steps applied in order, with a before/after comparison chart to confirm each did what you intended.</p>
+      <p class="methods"><strong>Steps:</strong> missing-value handling · outlier removal · detrending · noise filtering / smoothing · normalization / scaling.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">03</span><h3>Feature extraction</h3></div>
+      <p>A sliding window moves across the signal, summarizing each window into descriptive numbers.</p>
+      <p class="methods"><strong>Traditional:</strong> mean, standard deviation, RMS, variance, skewness, kurtosis, peak-to-peak, crest factor, dominant frequency, spectral energy.<br/><strong>Deep learning:</strong> Dense, LSTM, or 1D-CNN autoencoders that learn a compact latent embedding per window.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">04</span><h3>Fault detection</h3></div>
+      <p>The toolbox learns the shape of "normal" and flags windows that don't fit, controlled by a single intuitive <em>contamination</em> sensitivity dial.</p>
+      <p class="methods"><strong>Traditional:</strong> PCA (Hotelling's T²), Isolation Forest, One-Class SVM, Local Outlier Factor.<br/><strong>Deep learning:</strong> Autoencoder, Variational Autoencoder, Deep SVDD.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">05</span><h3>Fault identification</h3></div>
+      <p>For every flagged window, it ranks which variable and which feature deviated most from normal — a strong first clue for root-cause investigation, with a per-window drill-down.</p>
+      <p class="methods"><strong>Traditional:</strong> Z-score vs. a normal baseline.<br/><strong>Deep learning:</strong> Autoencoder Residual, Gradient × Input Saliency.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">06</span><h3>Evaluation &amp; report</h3></div>
+      <p>A headline summary, an anomaly-score distribution, a feature-deviation heatmap, and a ranking of top implicated variables — all exportable as a CSV or a printable HTML report to attach to a maintenance ticket.</p>
+    </div>
+
+    <p>Long-running actions — training, detection, feature extraction — all show a live progress bar with a working Cancel button, so nothing ever feels like it's silently hanging.</p>
+
+    <div class="callout">
+      <div class="c-eyebrow">★ Highlight feature</div>
+      <h3>A built-in, context-aware AI assistant</h3>
+      <p>The feature I'm most excited about is the AI assistant, available from every page. It isn't a generic chatbot bolted on — it already knows the live state of your analysis: what data is loaded, which features were extracted, and what detection just found. That's why its answers are specific to <em>your</em> run rather than generic advice.</p>
+      <p>Ask it "why was window 140 flagged?" or "which preprocessing should I try next?" in plain English, or use one-click prompts like <em>Interpret detection results</em> and <em>Traditional vs. deep learning</em>. It interprets results and suggests next steps, but never changes your data or settings — it's a thinking aid, not an autopilot. It works with OpenAI, Anthropic (Claude), a local Ollama model, or a custom internal endpoint, so it can run fully on-premises when data can't leave the building.</p>
+    </div>
+
+    <h2>Who it's for</h2>
+    <p>The same toolbox serves three very different kinds of user, because each stage was designed to be shallow enough to click through yet deep enough to dig into.</p>
+
+    <div class="audience-grid">
+      <div class="audience-card">
+        <span class="au-tag">In the field</span>
+        <h3>Operators, maintenance &amp; process engineers</h3>
+        <p>You already log sensor data but rarely have labeled failures — and that's exactly the case this handles. No coding, no training data, just a spreadsheet and a browser. Detection runs off a single intuitive <em>contamination</em> dial; a flagged window points you straight to the suspect variable; and one click exports a printable report to attach to a maintenance ticket. Because the AI assistant can run against a local Ollama model, the whole thing works fully on-premises when plant data can't leave the building.</p>
+      </div>
+
+      <div class="audience-card">
+        <span class="au-tag">Getting started</span>
+        <h3>General &amp; first-time users</h3>
+        <p>Every screen, setting, and term is written in plain language, with a picture-led quick-start guide, a tutorial video, and a glossary for anything unfamiliar. The interactive charts let you learn by doing — watch a feature change window by window, or see the before/after of a clean-up step. And when a result is puzzling, the built-in AI assistant explains it in plain English, so you're never stuck staring at a number you don't understand.</p>
+      </div>
+
+      <div class="audience-card">
+        <span class="au-tag">Research &amp; teaching</span>
+        <h3>Academic users &amp; students</h3>
+        <p>Traditional and deep-learning methods sit side by side at every stage — four detection algorithms (PCA, Isolation Forest, One-Class SVM, LOF) next to three neural ones (Autoencoder, VAE, Deep SVDD), plus multiple feature and identification methods. That makes it a ready-made testbed for comparing approaches, a baseline to benchmark new methods against, and a zero-code way to demonstrate FDI concepts in a classroom. Features and results export as CSV for downstream analysis, and the whole codebase is open source and extensible.</p>
+      </div>
+    </div>
+
+    <h2>How it's built</h2>
+    <p>FDI Analytics is a single-page web application written entirely in <strong>Python</strong> on top of <strong>Dash</strong> — Plotly's framework for building analytical web apps without leaving Python. There's no separate JavaScript front-end to maintain: the UI, the callbacks, and the numerical work all live in one codebase.</p>
+
+    <h3>The stack</h3>
+    <ul>
+      <li><strong>Dash + Plotly</strong> — the entire interface and every interactive chart (anomaly-score plots, heatmaps, before/after comparisons).</li>
+      <li><strong>pandas + NumPy</strong> — data handling and the sliding-window feature engineering.</li>
+      <li><strong>scikit-learn</strong> — the traditional detectors: PCA / Hotelling's T², Isolation Forest, One-Class SVM, and Local Outlier Factor, plus the scalers.</li>
+      <li><strong>SciPy</strong> — signal processing for the pre-processing stage (e.g. Savitzky–Golay smoothing) and statistical features (skewness, kurtosis).</li>
+      <li><strong>PyTorch (CPU build)</strong> — the deep-learning method family: autoencoders for features, and Autoencoder / VAE / Deep SVDD for detection.</li>
+    </ul>
+
+    <h3>Application architecture</h3>
+    <p>A few deliberate design decisions hold the app together:</p>
+    <ul>
+      <li><strong>Manual page routing.</strong> A single <code>dcc.Location</code> drives a router callback that renders each of the six pages on demand, so the app behaves like a multi-page tool while staying one process.</li>
+      <li><strong>Shared state via browser stores.</strong> The uploaded data, processed data, feature table, detection results, and even the AI-assistant conversation each live in a <code>dcc.Store</code>. That's what lets you move freely between pages without losing anything — each stage reads the previous stage's store and writes its own.</li>
+      <li><strong>A reactive callback graph.</strong> Roughly three dozen callbacks wire controls to outputs; changing a setting invalidates only what depends on it, and the heavy "Run" actions are explicit buttons rather than live-updating, since they can take real time.</li>
+    </ul>
+
+    <h3>Long-running work, done responsibly</h3>
+    <p>Training a network or scanning a large dataset can take a while, so those actions run as Dash <strong>background callbacks</strong> backed by a <code>diskcache</code> manager. That's what powers the live progress bar and the working <em>Cancel</em> button — the work happens off the request thread and can be interrupted cleanly. The deep-learning models are defined as a small set of PyTorch <code>nn.Module</code> classes (dense, LSTM, and 1D-CNN autoencoders, plus VAE and Deep SVDD variants).</p>
+
+    <h3>Graceful degradation</h3>
+    <p>Two capabilities are optional by design. If <strong>PyTorch</strong> isn't installed, the app still runs fully — the deep-learning options simply show a clear "how to enable this" message instead of crashing. Likewise, if the <strong>diskcache</strong> backend is absent, every action still completes synchronously, just without the progress bar and Cancel button. This keeps the barrier to a first run as low as possible.</p>
+
+    <h2>Deployment</h2>
+    <p>The app is containerized and <strong>deployed on Microsoft Azure</strong> (App Service). The build and serving procedure is intentionally lean:</p>
+
+    <ol>
+      <li><strong>Slim base image.</strong> It builds on <code>python:3.12-slim</code> — no compiler toolchain, since everything installs from pre-built CPU wheels.</li>
+      <li><strong>Layered dependency install.</strong> Requirements install in their own Docker layer before the app code is copied, so day-to-day edits to <code>app.py</code> don't trigger a full reinstall.</li>
+      <li><strong>CPU-only PyTorch.</strong> Torch is pulled from the dedicated CPU wheel index rather than the default, which avoids dragging in multi-gigabyte CUDA packages and keeps the image small — a real cost and cold-start win on App Service.</li>
+      <li><strong>Production WSGI server.</strong> The container doesn't use Dash's development server. It exposes the underlying Flask <code>server</code> object and serves it with <strong>Waitress</strong>, with a generous channel timeout so long training and detection jobs aren't cut off mid-run.</li>
+      <li><strong>Writable cache volume.</strong> The diskcache directory is set via an environment variable so it can point at a writable location in the container, and the deployment is kept to a single instance so that background-callback progress state stays consistent.</li>
+    </ol>
+
+    <p>The result is a self-contained image that runs identically on a laptop and in the cloud — you can try the running instance any time at <a href="https://fdi-analytics-app.azurewebsites.net/" target="_blank" rel="noopener">fdi-analytics-app.azurewebsites.net</a>.</p>
+
+    <p>The heart of the container, in miniature:</p>
+    <pre><code>FROM python:3.12-slim
+WORKDIR /app
+
+# Deps first (cached across app.py edits)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# CPU-only Torch — avoids multi-GB CUDA packages
+RUN pip install --no-cache-dir torch \
+    --index-url https://download.pytorch.org/whl/cpu
+
+COPY app.py .
+COPY assets/ ./assets/
+
+# Serve the Flask server object with Waitress
+CMD ["waitress-serve", "--host=0.0.0.0", \
+     "--port=8050", "--channel-timeout=1200", "app:server"]</code></pre>
+
+    <h2>Technical poster</h2>
+    <!-- ▼ Replace the src below with your poster image once it's in the images/ folder,
+         e.g. images/fdi-poster.png. Keep the alt text descriptive. ▼ -->
+    <figure>
+      <img src="../images/fdi-poster.png" alt="FDI Analytics technical poster summarizing the unsupervised fault detection and identification pipeline"/>
+      <figcaption>Technical poster — the FDI Analytics pipeline at a glance.</figcaption>
+    </figure>
+
+    <h2>Walkthrough video</h2>
+    <p>A full walkthrough of the toolbox, from loading data to exporting a report:</p>
+    <!-- ▼ Replace VIDEO_ID with your YouTube video ID (the part after v= in the URL).
+         If the video is hosted elsewhere, swap this whole block for a <video> tag or another embed. ▼ -->
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID" title="FDI Analytics walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <h2>Documentation</h2>
+    <p>The GitHub repository includes complete documentation so anyone can get started at their own pace — a step-by-step tutorial video, a picture-led quick-start guide, and a comprehensive user manual that explains every screen, setting, and term in plain language (no data-science background assumed).</p>
+
+    <div class="doc-grid">
+      <a href="https://github.com/mhmodir/FDI-Analytics-Toolbox" target="_blank" rel="noopener" class="doc-card">
+        <div class="d-title">Quick-Start Guide</div>
+        <div class="d-sub">A picture-led, one-pass walkthrough for operators.</div>
+      </a>
+      <a href="https://github.com/mhmodir/FDI-Analytics-Toolbox" target="_blank" rel="noopener" class="doc-card">
+        <div class="d-title">User Manual</div>
+        <div class="d-sub">Every screen and setting, explained in plain language.</div>
+      </a>
+      <a href="https://github.com/mhmodir/FDI-Analytics-Toolbox" target="_blank" rel="noopener" class="doc-card">
+        <div class="d-title">Tutorial Video</div>
+        <div class="d-sub">A guided run through the full pipeline.</div>
+      </a>
+      <a href="https://github.com/mhmodir/FDI-Analytics-Toolbox" target="_blank" rel="noopener" class="doc-card">
+        <div class="d-title">Source Code</div>
+        <div class="d-sub">The full Dash application on GitHub.</div>
+      </a>
+    </div>
+
+    <h2>What's next</h2>
+    <p>The toolbox is actively evolving. Directions I'm planning or exploring next:</p>
+    <ul>
+      <li><strong>Real-time / streaming monitoring</strong> — moving from batch analysis toward live data feeds (e.g. OPC UA connectivity) for continuous, scheduled detection.</li>
+      <li><strong>Richer causal analysis</strong> — going beyond ranking single variables toward mapping how a fault propagates between them, drawing on causal-discovery methods.</li>
+      <li><strong>Model persistence</strong> — saving trained detectors and embeddings so a "normal" baseline can be reused across runs and datasets.</li>
+      <li><strong>Historian &amp; database connectors</strong> — reading directly from industrial data sources rather than file uploads.</li>
+      <li><strong>Semi-supervised mode</strong> — optionally folding in the occasional known-fault label when one <em>is</em> available.</li>
+      <li><strong>Scalability</strong> — handling larger datasets and more variables efficiently.</li>
+    </ul>
+
+    <blockquote>
+      <p>The toolbox is open and free to use — I'd genuinely value your feedback. If you try it, tell me what worked, what broke, and what you'd want next.</p>
+    </blockquote>
+
+    <p>Try the <a href="https://fdi-analytics-app.azurewebsites.net/" target="_blank" rel="noopener">live demo</a>, explore the <a href="https://github.com/mhmodir/FDI-Analytics-Toolbox" target="_blank" rel="noopener">code and documentation on GitHub</a>, and please open an issue or reach out via the <a href="../index.html#contact">contact page</a> with any comments. Every bit of feedback helps shape where this goes.</p>
+  </div>
+</article>
+
+<div class="article-end">
+  <div class="article-end-inner">
+    <div class="author-chip">
+      <div>
+        <div class="a-name">Mohammad Hossein Modirrousta</div>
+        <div class="a-sub">PhD Researcher · University of Alberta</div>
+      </div>
+    </div>
+    <div class="share-links">
+      <button class="share-btn" onclick="copyLink()" id="copy-btn">Copy link</button>
+      <a class="share-btn" id="li-share" href="#" target="_blank" rel="noopener">Share on LinkedIn</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2026 Mohammad Hossein Modirrousta · <a href="../blog.html">More posts</a>
+</footer>
+
+<script>
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = pct + '%';
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  const pageUrl = window.location.href;
+  document.getElementById('li-share').href =
+    'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(pageUrl);
+
+  function copyLink() {
+    navigator.clipboard.writeText(pageUrl).then(() => {
+      const b = document.getElementById('copy-btn');
+      const original = b.textContent;
+      b.textContent = 'Copied ✓';
+      setTimeout(() => { b.textContent = original; }, 1800);
+    });
+  }
+</script>
+</body>
+</html>
