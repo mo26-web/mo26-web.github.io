@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Causal RCA: Finding Which Sensor Actually Caused the Fault · M. H. Modirrousta</title>
+  <meta name="description" content="Causal RCA is a point-and-click toolbox that infers a directed, time-lagged causal graph from process data to identify the root-cause variable and its propagation path — 19 methods, built in Python and Dash, deployed on Azure."/>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #faf7f2;
+      --warm-white: #fff9f3;
+      --ink: #1c1a17;
+      --muted: #6b6560;
+      --accent: #b85c38;
+      --accent-light: #f0e0d6;
+      --border: #e8e0d5;
+      --section-bg: #f5f0e8;
+      --code-bg: #2b2622;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(250,247,242,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0 2.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 62px;
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,0.08); }
+    .nav-name {
+      font-family: 'Lora', serif; font-size: 1rem;
+      letter-spacing: 0.02em; color: var(--ink); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; align-items: center; }
+    .nav-links a {
+      text-decoration: none; font-size: 0.8rem;
+      letter-spacing: 0.09em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.2s; position: relative;
+    }
+    .nav-links a::after {
+      content: ''; position: absolute; bottom: -3px; left: 0; right: 0;
+      height: 1.5px; background: var(--accent);
+      transform: scaleX(0); transform-origin: left; transition: transform 0.25s ease;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { transform: scaleX(1); }
+
+    /* ── READING PROGRESS ── */
+    #progress-bar {
+      position: fixed; top: 62px; left: 0; height: 2px;
+      background: var(--accent); z-index: 101; width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* ── ARTICLE ── */
+    .article { max-width: 680px; margin: 0 auto; padding: 130px 1.5rem 40px; }
+
+    .back-link {
+      display: inline-block; font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; margin-bottom: 2rem; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+
+    .article-meta {
+      display: flex; align-items: center; gap: 0.8rem;
+      font-size: 0.78rem; color: var(--muted);
+      margin-bottom: 1rem; flex-wrap: wrap;
+    }
+    .article-meta .a-date { text-transform: uppercase; letter-spacing: 0.1em; }
+    .article-meta .a-tag {
+      background: var(--accent-light); color: var(--accent);
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.15rem 0.6rem; border-radius: 2px; border: 1px solid rgba(184,92,56,0.15);
+    }
+
+    .article h1 {
+      font-family: 'Lora', serif;
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      font-weight: 600; line-height: 1.2; color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+    .article-divider { width: 40px; height: 2px; background: var(--accent); margin-bottom: 2rem; }
+
+    /* ── ACTION BUTTONS (demo / repo) ── */
+    .article-actions {
+      display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 2.5rem;
+    }
+    .action-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.6rem 1.2rem; border-radius: 4px;
+      font-size: 0.85rem; letter-spacing: 0.02em; text-decoration: none;
+      font-family: 'DM Sans', sans-serif; transition: all 0.2s;
+    }
+    .action-btn.primary { background: var(--accent); color: #fff; border: 1px solid var(--accent); }
+    .action-btn.primary:hover { background: #9e4b2c; transform: translateY(-1px); }
+    .action-btn.outline { background: transparent; color: var(--ink); border: 1px solid var(--border); }
+    .action-btn.outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+
+    /* ── PROSE ── */
+    .prose { font-size: 1.05rem; color: #33302c; }
+    .prose p { margin-bottom: 1.4rem; }
+    .prose h2 {
+      font-family: 'Lora', serif; font-size: 1.5rem; font-weight: 600;
+      color: var(--ink); margin: 2.6rem 0 1rem;
+    }
+    .prose h3 {
+      font-family: 'Lora', serif; font-size: 1.2rem; font-weight: 600;
+      color: var(--ink); margin: 2rem 0 0.8rem;
+    }
+    .prose a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+    .prose a:hover { text-decoration: none; }
+    .prose strong { font-weight: 500; color: var(--ink); }
+    .prose ul, .prose ol { margin: 0 0 1.4rem 1.4rem; }
+    .prose li { margin-bottom: 0.5rem; }
+
+    .prose blockquote {
+      border-left: 3px solid var(--accent);
+      background: var(--warm-white);
+      padding: 1rem 1.4rem; margin: 1.8rem 0;
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: 1.1rem; color: var(--ink);
+      border-radius: 0 4px 4px 0;
+    }
+    .prose blockquote p { margin: 0; }
+
+    .prose img {
+      max-width: 100%; height: auto;
+      border-radius: 4px; border: 1px solid var(--border);
+      margin: 1.8rem 0; display: block;
+    }
+    .prose figcaption {
+      font-size: 0.82rem; color: var(--muted);
+      text-align: center; margin-top: 0.6rem;
+    }
+
+    .prose code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.86em;
+      background: var(--accent-light);
+      color: #8a3f22;
+      padding: 0.12em 0.4em; border-radius: 3px;
+    }
+    .prose pre {
+      background: var(--code-bg); color: #f0e8df;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; line-height: 1.6;
+      padding: 1.2rem 1.4rem; border-radius: 6px;
+      overflow-x: auto; margin: 1.8rem 0;
+    }
+    .prose pre code { background: none; color: inherit; padding: 0; font-size: inherit; }
+
+    .prose hr { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
+
+    /* ── FEATURE CARDS (stage list) ── */
+    .stage {
+      background: var(--warm-white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1.2rem 1.5rem;
+      margin: 1.2rem 0;
+    }
+    .stage-head { display: flex; align-items: baseline; gap: 0.6rem; margin-bottom: 0.5rem; }
+    .stage-num { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); font-weight: 500; }
+    .stage h3 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 600; color: var(--ink); margin: 0; }
+    .stage p { margin-bottom: 0.6rem; font-size: 0.98rem; }
+    .stage p:last-child { margin-bottom: 0; }
+    .stage ul { margin: 0 0 0.6rem 1.2rem; font-size: 0.98rem; }
+    .stage li { margin-bottom: 0.35rem; }
+    .stage .methods { font-size: 0.9rem; color: var(--muted); }
+    .stage .methods strong { color: var(--accent); font-weight: 500; }
+
+    /* ── HIGHLIGHT CALLOUT ── */
+    .callout {
+      background: linear-gradient(0deg, var(--accent-light), var(--warm-white));
+      border: 1px solid rgba(184,92,56,0.25);
+      border-radius: 8px; padding: 1.5rem 1.6rem; margin: 2rem 0;
+    }
+    .callout .c-eyebrow {
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem; font-weight: 500;
+    }
+    .callout h3 { font-family: 'Lora', serif; font-size: 1.3rem; font-weight: 600; color: var(--ink); margin: 0 0 0.6rem; }
+    .callout p { margin-bottom: 0.8rem; }
+    .callout ul { margin: 0 0 0.8rem 1.3rem; }
+    .callout p:last-child { margin-bottom: 0; }
+
+    /* ── AUDIENCE CARDS ── */
+    .audience-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .audience-card {
+      background: var(--warm-white); border: 1px solid var(--border);
+      border-radius: 8px; padding: 1.3rem 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .audience-card:hover { border-color: var(--accent); transform: translateX(3px); }
+    .audience-card .au-tag {
+      display: inline-block; font-size: 0.68rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent); font-weight: 500;
+      background: var(--accent-light); border: 1px solid rgba(184,92,56,0.15);
+      padding: 0.15rem 0.6rem; border-radius: 2px; margin-bottom: 0.7rem;
+    }
+    .audience-card h3 { font-family: 'Lora', serif; font-size: 1.15rem; font-weight: 600; color: var(--ink); margin: 0 0 0.5rem; }
+    .audience-card p { font-size: 0.96rem; margin-bottom: 0; color: #33302c; }
+
+    /* ── VIDEO EMBED (responsive 16:9) ── */
+    .video-wrap {
+      position: relative; width: 100%; padding-bottom: 56.25%;
+      height: 0; overflow: hidden; border-radius: 6px;
+      border: 1px solid var(--border); margin: 1.8rem 0;
+      background: var(--section-bg);
+    }
+    .video-wrap iframe {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
+    }
+
+    /* ── DOC LINKS ── */
+    .doc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin: 1.5rem 0; }
+    .doc-card {
+      display: block; text-decoration: none; color: inherit;
+      background: var(--warm-white); border: 1px solid var(--border);
+      border-radius: 6px; padding: 1rem 1.2rem; transition: all 0.2s;
+    }
+    .doc-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .doc-card .d-title { font-family: 'Lora', serif; font-weight: 600; font-size: 0.98rem; color: var(--ink); margin-bottom: 0.2rem; }
+    .doc-card .d-sub { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── ARTICLE FOOTER ── */
+    .article-end { max-width: 680px; margin: 0 auto; padding: 0 1.5rem 80px; }
+    .article-end-inner {
+      border-top: 1px solid var(--border); padding-top: 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .author-chip { display: flex; align-items: center; gap: 0.8rem; }
+    .author-chip .a-name { font-family: 'Lora', serif; font-weight: 600; font-size: 0.95rem; }
+    .author-chip .a-sub { font-size: 0.8rem; color: var(--muted); }
+    .share-links { display: flex; gap: 0.6rem; }
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 1rem; border: 1px solid var(--border);
+      border-radius: 3px; font-size: 0.78rem; color: var(--ink);
+      text-decoration: none; transition: all 0.2s; cursor: pointer;
+      background: transparent; font-family: 'DM Sans', sans-serif;
+    }
+    .share-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    footer {
+      background: var(--ink);
+      padding: 1.5rem 2rem; text-align: center;
+      font-size: 0.78rem; color: rgba(255,255,255,0.3);
+    }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    @media (max-width: 720px) {
+      nav { padding: 0 1rem; }
+      .nav-links { gap: 1rem; font-size: 0.72rem; }
+      .article { padding: 110px 1.3rem 30px; }
+      .prose { font-size: 1rem; }
+      .doc-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="../index.html" class="nav-name">M. H. Modirrousta</a>
+  <ul class="nav-links">
+    <li><a href="../index.html#about">About</a></li>
+    <li><a href="../index.html#papers">Papers</a></li>
+    <li><a href="../blog.html">Blog</a></li>
+    <li><a href="../index.html#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<article class="article">
+  <a href="../blog.html" class="back-link">← All posts</a>
+
+  <div class="article-meta">
+    <span class="a-date">August 13, 2026</span>
+    <span class="a-tag">Project</span>
+    <span>9 min read</span>
+  </div>
+
+  <h1>Causal RCA: Finding Which Sensor Actually Caused the Fault</h1>
+  <div class="article-divider"></div>
+
+  <div class="article-actions">
+    <a href="https://causal-rca-app.azurewebsites.net/" target="_blank" rel="noopener" class="action-btn primary">
+      Try the live demo →
+    </a>
+    <a href="https://github.com/mhmodir/Causal-RCA-Toolbox" target="_blank" rel="noopener" class="action-btn outline">
+      View on GitHub
+    </a>
+  </div>
+
+  <div class="prose">
+    <p>A plant upset almost never announces itself in one signal. A valve sticks, and within minutes the flow wobbles, the level drifts, the temperature follows, and the composition downstream goes off spec. By the time the alarms land, a dozen sensors are all deviating at once and all correlating beautifully with each other.</p>
+
+    <p>Correlation cannot tell you which one moved first. That is not a limitation of the particular statistic you chose; it is the definition of correlation. It is symmetric. It has no arrow. Ask it which of two coupled signals caused the other and it will answer both, equally, forever.</p>
+
+    <p><strong>Causal RCA</strong> is a point-and-click toolbox I built to supply the arrow. It takes multivariate process data, infers a <strong>directed, time-lagged causal graph</strong> among the variables, and then uses that graph to answer the question a maintenance engineer actually has:</p>
+
+    <ul>
+      <li><strong>Which variable originated this?</strong> — root-cause identification.</li>
+      <li><strong>How did it spread from there?</strong> — propagation path.</li>
+    </ul>
+
+    <p>It is the companion to my <a href="fdi-analytics-toolbox.html">FDI Analytics Toolbox</a>. That tool answers <em>"is there a fault, and which sensors are affected?"</em> This one answers the next question, the harder one: <em>"which sensor caused it, and how did it travel?"</em> Everything runs in a browser, no coding required. It is live on Azure now, with the manual, quick-start guide, and video walkthrough on GitHub.</p>
+
+    <h2>The six-stage workflow</h2>
+    <p>You work top to bottom through six stages, and each stage's output feeds the next.</p>
+
+    <figure>
+      <svg width="100%" viewBox="0 0 680 120" role="img" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <title>The six-stage Causal RCA workflow: data and scenario, pre-process, discover, monitor, root-cause, report</title>
+        <desc>A left-to-right pipeline of six connected stages, each feeding the next.</desc>
+        <style>
+          .w-box { fill: #fff9f3; stroke: #b85c38; stroke-width: 1; }
+          .w-num { font-family: 'JetBrains Mono', monospace; font-size: 11px; fill: #b85c38; }
+          .w-label { font-family: 'DM Sans', sans-serif; font-size: 12px; fill: #1c1a17; font-weight: 500; }
+          .w-arrow { stroke: #d8997c; stroke-width: 1.5; fill: none; }
+        </style>
+        <g>
+          <rect x="6"   y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="55" y="58" text-anchor="middle" class="w-num">01</text>
+          <text x="55" y="74" text-anchor="middle" class="w-label">Data</text>
+        </g>
+        <path class="w-arrow" d="M108 62 L118 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="120" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="169" y="58" text-anchor="middle" class="w-num">02</text>
+          <text x="169" y="74" text-anchor="middle" class="w-label">Pre-process</text>
+        </g>
+        <path class="w-arrow" d="M222 62 L232 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="234" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="283" y="58" text-anchor="middle" class="w-num">03</text>
+          <text x="283" y="74" text-anchor="middle" class="w-label">Discover</text>
+        </g>
+        <path class="w-arrow" d="M336 62 L346 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="348" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="397" y="58" text-anchor="middle" class="w-num">04</text>
+          <text x="397" y="74" text-anchor="middle" class="w-label">Monitor</text>
+        </g>
+        <path class="w-arrow" d="M450 62 L460 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="462" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="511" y="58" text-anchor="middle" class="w-num">05</text>
+          <text x="511" y="74" text-anchor="middle" class="w-label">Root-Cause</text>
+        </g>
+        <path class="w-arrow" d="M564 62 L574 62" marker-end="url(#wa)"/>
+        <g>
+          <rect x="576" y="40" width="98" height="44" rx="5" class="w-box"/>
+          <text x="625" y="58" text-anchor="middle" class="w-num">06</text>
+          <text x="625" y="74" text-anchor="middle" class="w-label">Evaluate</text>
+        </g>
+        <defs>
+          <marker id="wa" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <path d="M0 0 L6 3.5 L0 7 z" fill="#d8997c"/>
+          </marker>
+        </defs>
+      </svg>
+      <figcaption>Data &amp; Scenario → Pre-process → Discover → Monitor → Root-Cause → Evaluate &amp; Report.</figcaption>
+    </figure>
+
+    <p>Stages 1 to 3 build the causal graph. Stage 4 watches it change over time. Stage 5 reads the root cause off it. Stage 6 checks whether any of it should be believed.</p>
+
+    <p>That last stage deserves a word up front, because it is where causal discovery differs sharply from ordinary machine learning. In supervised learning you hold out a test set and get a number. In causal discovery on real plant data there is no answer key at all: nobody labelled which sensor truly caused the 2023 upset. A tool that hands you a confident graph and no way to interrogate it is asking for trust it has not earned. So validation is a full stage here, not a footnote.</p>
+
+    <h2>Features, stage by stage</h2>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">01</span><h3>Data and scenario</h3></div>
+      <p>Drag in a CSV or Excel file, inspect each signal, and mark two windows: a stretch of normal operation and the fault period you want explained. If you just want to see how the tool behaves, a <strong>built-in synthetic process</strong> loads with one click, complete with a known ground-truth graph, so you can watch the methods succeed and fail against a structure you already know.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">02</span><h3>Pre-processing</h3></div>
+      <p>Causal discovery is far more sensitive to preparation than detection is. Most methods assume stationarity, and a trending signal will manufacture links that are not there.</p>
+      <p class="methods"><strong>Steps:</strong> stationarity treatment · detrending · differencing · smoothing · scaling · maximum-lag selection.</p>
+      <p>The maximum lag matters more than any other single setting. Set it too short and you miss slow couplings entirely; too long and you drown the estimator in parameters.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">03</span><h3>Causal discovery</h3></div>
+      <p>Nineteen algorithms across four families, all sharing one interface and one output format so you can swap between them freely.</p>
+      <p class="methods">
+        <strong>Classic and statistical:</strong> conditional Granger (VAR), pairwise Granger, lagged cross-correlation, transfer entropy, PCMCI.<br/>
+        <strong>Machine learning, traditional:</strong> Random-Forest Granger, Gradient-Boosting Granger, SVR Granger, Lasso-Granger, lagged mutual information, VarLiNGAM.<br/>
+        <strong>Machine learning, deep learning:</strong> Neural Granger cMLP, cLSTM, cGRU, convolutional TCN Granger, temporal attention (TCDF).<br/>
+        <strong>Probabilistic:</strong> bootstrap edge probability, stability selection, Bayesian regression posterior.
+      </p>
+      <p>The probabilistic family is worth singling out. Its methods do not return a link or no link; every edge carries a <strong>probability and an uncertainty band</strong>, and links the data cannot pin down are drawn dashed and dimmed rather than quietly presented as fact. A graph that admits what it does not know is more useful than one that does not.</p>
+      <p>My standing advice is to run three or four methods from <em>different</em> families and trust what they agree on. Methods resting on different assumptions rarely make the same mistake, and the report's comparison table exists for exactly this.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">04</span><h3>Structural monitoring</h3></div>
+      <p>The graph is re-estimated on sliding windows across the record, and edges are tracked as they appear, vanish, or drift in strength.</p>
+      <p>This catches something detection alone cannot. A signal can stay perfectly within its normal range while its <em>relationship</em> to its neighbours changes underneath. A controller quietly saturating, a heat exchanger fouling, a loop retuned last Tuesday: the levels look fine, the structure does not. Stage 4 timestamps that change.</p>
+    </div>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">05</span><h3>Root-cause identification</h3></div>
+      <p>Candidates are scored on three properties of the graph, with baseline deviation shown alongside as context rather than as evidence:</p>
+      <ul>
+        <li><strong>Upstreamness</strong> — how near the source of the graph the variable sits.</li>
+        <li><strong>Earliness</strong> — how soon its deviation begins relative to the rest.</li>
+        <li><strong>Out-centrality</strong> — how much of the network it drives downstream.</li>
+      </ul>
+      <p>The output is a ranked candidate list plus a <strong>propagation path</strong> plot: the disturbance's actual route through the plant, with the estimated lag labelled on every hop. That plot tends to be the thing people photograph and take into the meeting.</p>
+    </div>
+
+    <figure>
+      <svg width="100%" viewBox="0 0 680 165" role="img" xmlns="http://www.w3.org/2000/svg" style="display:block;">
+        <title>A propagation path: a disturbance travelling from a root-cause flow controller through temperature and level loops to a downstream quality measurement</title>
+        <desc>Five tagged nodes connected by directed arrows, each labelled with an estimated lag in samples.</desc>
+        <style>
+          .p-box { fill: #fff9f3; stroke: #b85c38; stroke-width: 1; }
+          .p-root { fill: #f0e0d6; stroke: #b85c38; stroke-width: 2; }
+          .p-tag { font-family: 'JetBrains Mono', monospace; font-size: 12px; fill: #1c1a17; }
+          .p-lag { font-family: 'JetBrains Mono', monospace; font-size: 10px; fill: #b85c38; }
+          .p-note { font-family: 'DM Sans', sans-serif; font-size: 10.5px; fill: #b85c38; letter-spacing: 0.06em; }
+          .p-edge { stroke: #d8997c; stroke-width: 1.5; fill: none; }
+        </style>
+        <g>
+          <rect x="8" y="63" width="96" height="36" rx="5" class="p-root"/>
+          <text x="56" y="86" text-anchor="middle" class="p-tag">FIC-101</text>
+          <text x="56" y="122" text-anchor="middle" class="p-note">ROOT CAUSE</text>
+        </g>
+        <path class="p-edge" d="M106 72 L184 46" marker-end="url(#pa)"/>
+        <text x="146" y="48" text-anchor="middle" class="p-lag">lag 2</text>
+        <path class="p-edge" d="M106 90 L184 116" marker-end="url(#pa)"/>
+        <text x="146" y="122" text-anchor="middle" class="p-lag">lag 1</text>
+        <g>
+          <rect x="190" y="20" width="96" height="36" rx="5" class="p-box"/>
+          <text x="238" y="43" text-anchor="middle" class="p-tag">TI-204</text>
+        </g>
+        <g>
+          <rect x="190" y="106" width="96" height="36" rx="5" class="p-box"/>
+          <text x="238" y="129" text-anchor="middle" class="p-tag">LIC-110</text>
+        </g>
+        <path class="p-edge" d="M288 46 L366 72" marker-end="url(#pa)"/>
+        <text x="328" y="48" text-anchor="middle" class="p-lag">lag 3</text>
+        <path class="p-edge" d="M288 116 L366 90" marker-end="url(#pa)"/>
+        <text x="328" y="122" text-anchor="middle" class="p-lag">lag 2</text>
+        <g>
+          <rect x="372" y="63" width="96" height="36" rx="5" class="p-box"/>
+          <text x="420" y="86" text-anchor="middle" class="p-tag">AI-330</text>
+        </g>
+        <path class="p-edge" d="M470 81 L548 81" marker-end="url(#pa)"/>
+        <text x="509" y="72" text-anchor="middle" class="p-lag">lag 4</text>
+        <g>
+          <rect x="554" y="63" width="96" height="36" rx="5" class="p-box"/>
+          <text x="602" y="86" text-anchor="middle" class="p-tag">QC-500</text>
+        </g>
+        <defs>
+          <marker id="pa" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+            <path d="M0 0 L6 3.5 L0 7 z" fill="#d8997c"/>
+          </marker>
+        </defs>
+      </svg>
+      <figcaption>A propagation path, schematically: the route the disturbance took, with the estimated lag on every hop. The loudest alarm is usually at the right-hand end.</figcaption>
+    </figure>
+
+    <div class="stage">
+      <div class="stage-head"><span class="stage-num">06</span><h3>Evaluation &amp; report</h3></div>
+      <p>Four checks stand in for the test set you do not have:</p>
+      <ul>
+        <li><strong>Out-of-sample R².</strong> Does the fitted structure predict data it never saw?</li>
+        <li><strong>Block bootstrap stability.</strong> How often does each link survive resampling?</li>
+        <li><strong>Placebo injection.</strong> A synthetic cause with a known answer is injected. Does the method find it?</li>
+        <li><strong>Method comparison.</strong> An agreement matrix across families.</li>
+      </ul>
+      <p>Where ground truth <em>is</em> available, as with the synthetic demo, precision, recall, F1, and structural Hamming distance are reported directly. Everything exports as a self-contained HTML or PDF report, graph included.</p>
+    </div>
+
+    <div class="callout">
+      <div class="c-eyebrow">★ Highlight feature</div>
+      <h3>Domain knowledge as a first-class input</h3>
+      <p>The feature I would defend hardest is the constraint editor, and it is the one that sounds least impressive on a feature list.</p>
+      <p>Every engineer looking at a plant already knows things no algorithm can infer from a few thousand samples. Flow goes this way. That valve cannot possibly affect the upstream tank. These four sensors sit on the same unit. That knowledge is usually better evidence than anything a statistical test will produce from a short record, and most causal discovery tools give you nowhere to put it.</p>
+      <p>Three constraint types can be set before discovery runs:</p>
+      <ul>
+        <li><strong>Forbidden links</strong> — ruling out directions that are physically impossible.</li>
+        <li><strong>Required links</strong> — forcing couplings you know exist but the record may be too short to reveal.</li>
+        <li><strong>Upstream tier ordering</strong> — assigning variables to process tiers so links may only flow forward.</li>
+      </ul>
+      <p>They apply to every method, are stored with the graph, are honoured by the reliability tests, and are printed in the report. The effect is not cosmetic. In the bundled demo, differencing the data induces two spurious backward links, exactly the kind of artefact that makes a graph quietly wrong. A single tier assignment removes both, lifting precision from 0.71 to 1.00 and dropping structural Hamming distance from 2 to 0. One minute of process knowledge, entered once, outperformed every algorithmic refinement I tried.</p>
+    </div>
+
+    <h2>The AI assistant</h2>
+    <p>As in the FDI toolbox, an optional assistant dock is available from every page, and it knows the live state of your analysis: the variables loaded, the constraints you set, the graph just discovered, the monitoring flags, the current ranking. Its answers are about <em>your</em> run, not causal inference in general.</p>
+
+    <p>It works with OpenAI, Anthropic, a local Ollama model, or a custom internal endpoint, so it can run entirely on-premises when process data cannot leave the site. It interprets and suggests; it never edits your data or your settings.</p>
+
+    <p>One deliberate limitation: on the public demo the assistant is left unconfigured. The narrative summary in the report is written from the numbers by template, with no API key and no internet access required, so the tool is fully useful with the assistant switched off entirely.</p>
+
+    <h2>Who it's for</h2>
+
+    <div class="audience-grid">
+      <div class="audience-card">
+        <span class="au-tag">In the field</span>
+        <h3>Process &amp; control engineers</h3>
+        <p>You have the historian data and you have a theory about what happened. This gives you a way to test the theory rather than argue it, and a propagation diagram to put in front of people who were not in the control room. Constraints let you encode what you already know about the unit, so the tool works with your process knowledge instead of ignoring it. The report exports straight into an incident write-up.</p>
+      </div>
+
+      <div class="audience-card">
+        <span class="au-tag">Reliability</span>
+        <h3>Reliability &amp; maintenance teams</h3>
+        <p>The costly mistake in root-cause work is replacing the loudest asset rather than the responsible one. Ranking by upstreamness and earliness rather than by deviation magnitude is aimed squarely at that: the sensor screaming hardest is frequently a victim, not a culprit. The structural monitor also flags degradation that never breaches an alarm limit, which is exactly the failure mode that shows up as a surprise.</p>
+      </div>
+
+      <div class="audience-card">
+        <span class="au-tag">Research &amp; teaching</span>
+        <h3>Researchers &amp; students</h3>
+        <p>Nineteen methods across four families sit behind one interface with one output format, which makes this a ready-made bench for comparing them. The synthetic process has known ground truth, so precision, recall, F1, and SHD are computed for real rather than estimated. The reliability suite (bootstrap stability, placebo injection, out-of-sample R²) is the same one you would have to write yourself for a paper. As a teaching aid it makes the correlation-versus-causation lesson concrete in about five minutes: run cross-correlation, run conditional Granger, look at the difference.</p>
+      </div>
+    </div>
+
+    <h2>How it's built</h2>
+    <p>Causal RCA is a single-page web application written entirely in <strong>Python</strong> on <strong>Dash</strong>. There is no separate JavaScript front end; the interface, the callbacks, and the numerical work live in one codebase.</p>
+
+    <h3>The stack</h3>
+    <ul>
+      <li><strong>Dash and Plotly</strong> — the interface and every interactive chart.</li>
+      <li><strong>Dash Cytoscape and NetworkX</strong> — the causal graph: layout, rendering, and the path algorithms behind propagation and upstreamness.</li>
+      <li><strong>pandas and NumPy</strong> — data handling and lag-matrix construction.</li>
+      <li><strong>SciPy and statsmodels</strong> — the VAR fits, F-tests, and stationarity treatment.</li>
+      <li><strong>scikit-learn</strong> — the traditional ML engines: forests, boosting, SVR, Lasso, and the permutation-importance machinery.</li>
+      <li><strong>tigramite</strong> for PCMCI and <strong>lingam</strong> for VarLiNGAM.</li>
+      <li><strong>PyTorch (CPU build)</strong> — the five deep-learning engines.</li>
+      <li><strong>ReportLab</strong> — PDF export.</li>
+    </ul>
+
+    <h3>Application architecture</h3>
+    <ul>
+      <li><strong>Manual page routing.</strong> A single <code>dcc.Location</code> drives a router callback rendering each of the six pages on demand, so it behaves like a multi-page tool while staying one process.</li>
+      <li><strong>Shared state via browser stores.</strong> Raw data, processed data, constraints, the discovered graph, monitoring results, and the assistant conversation each live in a <code>dcc.Store</code>, so you can move between stages without losing work.</li>
+      <li><strong>One graph object, many producers.</strong> Every one of the 19 methods returns the same structure: a weighted adjacency matrix with lags, plus optional uncertainty. Monitoring, root-cause scoring, reporting, and the assistant all consume that one object, which is why adding a twentieth method is a contained change rather than a rewrite.</li>
+    </ul>
+
+    <h3>Drawing a causal graph that is actually readable</h3>
+    <p>More effort went into this than I expected. A causal graph from real process data is a directed graph with cycles, self-loops, and lag labels, and the default force layout renders it as a hairball.</p>
+    <p>The layout breaks cycles using the Eades, Lin and Smyth heuristic, assigns layers, and draws left to right so that upstream is genuinely to the left. Node styling matches the propagation plot exactly, with the same glow-halo nodes, white rings, solid arrowheads, and lag labels, so moving between the two views does not require relearning the notation. Uncertain links are dashed and dimmed rather than hidden, because an edge the data is unsure about is information, not noise.</p>
+
+    <h3>Long-running work, done responsibly</h3>
+    <p>Discovery on a wide dataset, and especially neural Granger training, takes real time. Those actions run as Dash <strong>background callbacks</strong> backed by a <code>diskcache</code> manager, which is what powers the live progress bar and the working Cancel button. The work happens off the request thread and can be interrupted cleanly.</p>
+
+    <h3>Graceful degradation</h3>
+    <p>Three dependencies are optional by design. Without <code>torch</code> the five deep-learning engines grey out with a note on how to enable them; without <code>tigramite</code> PCMCI does the same, and without <code>lingam</code> so does VarLiNGAM. The other fourteen methods run regardless. The app never crashes because something is missing, it just offers less.</p>
+
+    <h2>Deployment</h2>
+    <p>The app is <strong>deployed on Microsoft Azure App Service</strong> in the Canada Central region, and the interesting part of that story is the constraint.</p>
+
+    <p>It runs on the <strong>F1 free tier</strong>: 1 GB of RAM, one shared core. I fully expected to have to disable the deep-learning family to fit, and I was wrong. All 19 methods are live on the free tier. The deciding move was pulling PyTorch from the dedicated CPU wheel index rather than the default, which is roughly 200 MB instead of 2 GB of CUDA packages nobody was going to use on a machine with no GPU.</p>
+
+    <p>The rest of the configuration follows from two facts:</p>
+    <ol>
+      <li><strong>Single instance, always.</strong> Background-callback state lives in a local diskcache, so horizontal scaling would split the job state across machines. This is why App Service was chosen over Container Apps, which autoscales by default. Gunicorn runs with <code>--workers=1</code> for the same reason.</li>
+      <li><strong>Generous timeouts.</strong> <code>--timeout=1200</code>, because a neural Granger fit on a wide dataset genuinely takes that long on a shared core.</li>
+    </ol>
+
+    <p>The cache directory is set through an environment variable, defaulting to system temp when the runtime reports an Azure environment, so the same code runs unchanged on a laptop and in the cloud.</p>
+
+    <p>The honest caveat: the deep-learning engines <em>work</em> on the free tier but they are slow, and a large dataset will test your patience. For serious neural work, run it locally on a machine with a GPU. The other fourteen methods are comfortable.</p>
+
+    <pre><code># The line that made the free tier viable
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch</code></pre>
+
+    <h2>Technical poster</h2>
+    <figure>
+      <img src="images/causal-rca-poster.jpg" alt="Causal RCA technical poster summarizing the causal discovery and root-cause analysis pipeline"/>
+      <figcaption>Technical poster — the Causal RCA pipeline at a glance.</figcaption>
+    </figure>
+
+    <h2>Walkthrough</h2>
+    <p>For the full walkthrough, from loading data through to the propagation path and exported report, watch the video:</p>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/oN_iPlHFc2M" title="Causal RCA walkthrough" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <h2>Documentation</h2>
+    <p>The repository includes complete documentation so anyone can start at their own pace: a step-by-step tutorial video, a picture-led quick-start guide, and a comprehensive manual explaining every stage, method, parameter, and metric in plain language, with no background in causal inference assumed.</p>
+
+    <p>One detail I am quietly pleased with: every figure and every quoted number in the manual is generated programmatically from a miniature re-implementation of the pipeline. Nothing in it is an illustrative sketch. The 0.71 to 1.00 precision figure quoted earlier is computed, not asserted, which means the documentation and the software cannot drift apart as the tool changes.</p>
+
+    <div class="doc-grid">
+      <a href="https://github.com/mhmodir/Causal-RCA-Toolbox/blob/main/docs/quickstart.pdf" target="_blank" rel="noopener" class="doc-card">
+        <div class="d-title">Quick-Start Guide</div>
+        <div class="d-sub">A picture-led, one-pass walkthrough for operators.</div>
+      </a>
+      <a href="https://github.com/mhmodir/Causal-RCA-Toolbox/blob/main/docs/user_manual.pdf" target="_blank" rel="noopener" class="doc-card">
+        <div class="d-title">User Manual</div>
+        <div class="d-sub">Every stage, method, and metric, explained in plain language.</div>
+      </a>
+      <a href="https://youtu.be/oN_iPlHFc2M" target="_blank" rel="noopener" class="doc-card">
+        <div class="d-title">Tutorial Video</div>
+        <div class="d-sub">A guided run through the full pipeline.</div>
+      </a>
+      <a href="https://github.com/mhmodir/Causal-RCA-Toolbox" target="_blank" rel="noopener" class="doc-card">
+        <div class="d-title">Project Repository</div>
+        <div class="d-sub">Documentation, poster, and project resources.</div>
+      </a>
+    </div>
+
+    <h2>What's next</h2>
+    <ul>
+      <li><strong>Non-stationary regimes.</strong> Automatic segmentation with a graph estimated per regime, instead of one global structure asked to describe a process that changed halfway through.</li>
+      <li><strong>Tighter FDI coupling.</strong> Taking the detection output from FDI Analytics directly as the fault window, so the two tools become one workflow rather than two.</li>
+      <li><strong>Topology import.</strong> Reading constraints from P&amp;ID or tag-hierarchy files instead of manual entry, since the constraint editor is the highest-value feature and currently the most tedious to fill in.</li>
+      <li><strong>Alarm integration.</strong> Combining alarm sequences with the inferred graph to explain alarm floods, which is where root-cause questions get asked most urgently and answered worst.</li>
+      <li><strong>Interventional analysis.</strong> Simulating what the process would do if a variable were held constant, using the fitted structure.</li>
+      <li><strong>Execution speed.</strong> Parallelised discovery and incremental re-estimation for the sliding-window monitor.</li>
+    </ul>
+
+    <blockquote>
+      <p>The toolbox is free to use and I would genuinely value your feedback. If you try it, tell me what worked, what broke, and what you would want next. I am especially interested in whether the constraint editor matches how engineers actually think about their process, because that is the part I had to guess at most.</p>
+    </blockquote>
+
+    <p>Try the <a href="https://causal-rca-app.azurewebsites.net/" target="_blank" rel="noopener">live demo</a>, explore the <a href="https://github.com/mhmodir/Causal-RCA-Toolbox" target="_blank" rel="noopener">documentation on GitHub</a>, and reach out through the <a href="../index.html#contact">contact page</a> with any comments.</p>
+  </div>
+</article>
+
+<div class="article-end">
+  <div class="article-end-inner">
+    <div class="author-chip">
+      <div>
+        <div class="a-name">Mohammad Hossein Modirrousta</div>
+        <div class="a-sub">PhD Researcher · University of Alberta</div>
+      </div>
+    </div>
+    <div class="share-links">
+      <button class="share-btn" onclick="copyLink()" id="copy-btn">Copy link</button>
+      <a class="share-btn" id="li-share" href="#" target="_blank" rel="noopener">Share on LinkedIn</a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  © 2026 Mohammad Hossein Modirrousta · <a href="../blog.html">More posts</a>
+</footer>
+
+<script>
+  const bar = document.getElementById('progress-bar');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    bar.style.width = pct + '%';
+    document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  const pageUrl = window.location.href;
+  document.getElementById('li-share').href =
+    'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(pageUrl);
+
+  function copyLink() {
+    navigator.clipboard.writeText(pageUrl).then(() => {
+      const b = document.getElementById('copy-btn');
+      const original = b.textContent;
+      b.textContent = 'Copied ✓';
+      setTimeout(() => { b.textContent = original; }, 1800);
+    });
+  }
+</script>
+</body>
+</html>
